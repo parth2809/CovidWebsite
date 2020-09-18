@@ -1,5 +1,6 @@
 <!doctype html>
 <html lang="en">
+
   <head>
     <!-- Required meta tags -->
     <meta charset="utf-8">
@@ -7,10 +8,26 @@
 
     <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" crossorigin="anonymous">
+    <link rel="stylesheet" href="style.css">
 
-    <title>Hello, world!</title>
+    <title>GLEAM Project Forecasts</title>
   </head>
+
   <body>
+    <div id="uc-emergency">
+        <div style="display: block;" class="alert alert-warning-banner text-center" role="alert">
+            <div class="container no-gutter">
+                <div class="row">
+                    <div class="col-xs-12 col-md-3 col-lg-2">
+                        <strong>COVID-19 Updates</strong>
+                    </div>
+                    <div class="col-xs-12 col-md-7 col-lg-8"><p>Read the fall 2020 plan for classroom operations, testing, and prevention.</p></div>
+                    <div class="col-xs-12 col-md-2"><a href="https://returntolearn.ucsd.edu/return-to-campus/fall-2020-plan/index.html" class="alert-link text-right text-link small no-hover">View Details</a></div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
     <!-- Header -->
     <div class="row no-gutters">
         <div class="col">
@@ -26,7 +43,7 @@
     <div class="container-fluid">
         <div class="row">
             <div class="col d-flex justify-content-center text-center">
-                <h1>TITLE OF GRAPH</h1>
+                <h1>GLEAM PROJECT FORECASTS</h1>
             </div>
         </div>
         <div class="row">
@@ -34,33 +51,57 @@
                 <h4>View the data and prediction in each region by clicking the map</h4>
             </div>
         </div>
+        <div class="row">
+            <div class="col d-flex justify-content-center text-center">
+                <p>Updated: 9/18/2020</p>
+            </div>
+        </div>
+
+        <br />
+        
+        <div class="row">
+            <!-- US Map Chart will live here -->
+            <div id="map" style="align: center"></div>
+        </div>
+        <div class="row">
+            <!-- Daily Chart will live here -->
+        </div>
+
+        <br />
+        
+        <div class="row">
+            <div style="text-align: center; padding: 25px 100px 25px 100px;">
+                <h5>ABOUT THIS PROJECT</h5>
+                <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
+            </div>
+        </div>
     </div>
 
  
     <!-- Footer -->
-    <nav class="navbar navbar-expand navbar-dark fixed-bottom" style="background-color: #006A96;">
+    <nav class="navbar navbar-expand navbar-dark" style="background-color: #006A96;">
         <div class="container">
             <div class="d-flex flex-column flex-wrap flex-fill">
                 <span class="navbar-text mx-auto py-0">IN COLLABORATION WITH</span>
                 <br />
                 <ul class="navbar-nav mb-auto mt-0 mx-auto">
                     <li class="nav-item active">
-                        <a class="nav-link py-0" href="https://datascience.ucsd.edu/"><img style="width:auto;height:60px;" src="logos/UCSanDiego_Halicioglu_White.png" alt="HDSI Logo in White"></a>
+                        <a class="nav-link py-0" href="https://datascience.ucsd.edu/" target="_blank"><img class="logo-collab" src="logos/UCSanDiego_Halicioglu_White.png" alt="HDSI Logo in White"></a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link py-0" href="https://jacobsschool.ucsd.edu/"><img style="width:auto;height:60px;" src="logos/UCSanDiego_Halicioglu_White.png" alt="JSOE Logo in White"></a>
+                        <a class="nav-link py-0" href="https://jacobsschool.ucsd.edu/" target="_blank"><img class="logo-collab" src="logos/UCSanDiego_Halicioglu_White.png" alt="JSOE Logo in White"></a>
                     </li>
                 </ul>
                 <br />
                 <ul class="navbar-nav mb-auto mt-0 mx-auto">
                     <li class="nav-item">
-                        <a class="nav-link py-0" href="#">GLEAM PROJECT</a>
+                        <a class="nav-link py-0 bottom-link" href="https://sites.google.com/view/yianma/epidemiology" target="_blank">GLEAM PROJECT</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link py-0" href="#">CONTACT US</a>
+                        <a class="nav-link py-0" href="https://datascience.ucsd.edu/about/contact"  target="_blank">CONTACT US</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link py-0" href="#">&#169;2020 REGENTS OF THE UNIVERSITY OF CALIFORNIA</a>
+                        <p class="nav-text py-0" style="color: rgba(255,255,255,.5)" >&#169;2020 REGENTS OF THE UNIVERSITY OF CALIFORNIA</p>
                     </li>
                 </ul>
             </div>
@@ -72,5 +113,12 @@
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js" integrity="sha384-9/reFTGAW83EW2RDu2S0VKaIzap3H66lZH81PoYlFhbGU+6BZp6G7niu735Sk7lN" crossorigin="anonymous"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js" integrity="sha384-B4gt1jrGC7Jh4AgTPSdUtOBvfO8shuf57BaghqFfPlYxofvL8/KUEfYiJOMMV+rV" crossorigin="anonymous"></script>
+    
+    <script src="https://code.highcharts.com/maps/highmaps.js"></script>
+    <script src="https://code.highcharts.com/maps/modules/data.js"></script>
+    <script src="https://code.highcharts.com/maps/modules/exporting.js"></script>
+    <script src="https://code.highcharts.com/maps/modules/offline-exporting.js"></script>
+    <script src="https://code.highcharts.com/mapdata/countries/us/us-all.js"></script>
+    <script type="text/javascript" src="js/map.js"></script>
   </body>
 </html>

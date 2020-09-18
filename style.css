@@ -1,0 +1,55 @@
+.logo-collab {
+    width:auto;
+    height:60px;
+}
+
+
+#map {
+    height: 500px;
+    width: 800px;
+    margin: 0 auto; 
+}
+.loading {
+    margin-top: 10em;
+    text-align: center;
+    color: gray;
+}
+
+#uc-emergency > .alert {
+    margin-bottom: 0px !important;
+}
+#uc-emergency > .alert-warning-banner {
+    background-color: #c69214;
+    color: #000 !important;
+    border-color: transparent;
+    border-radius: 0;
+    text-align: center;
+}
+#uc-emergency > .alert-warning-banner a {
+    color: #000 !important;
+    border-color: #000 !important;
+}
+#uc-emergency > a.alert-link:hover {
+    text-decoration: none;
+}
+#uc-emergency > .alert .text-link {
+    border-color: #000 !important;
+    border-bottom: 1px solid #000;
+    font-size: 16px;
+}
+#uc-emergency > .no-hero {
+    margin: 18.5em 0 3em;
+}
+#uc-emergency > .row.spacer {
+    margin-top: 95px;
+}
+@media only screen and (max-width: 990px) {
+    #uc-emergency > .row.spacer {
+        margin-top: 190px;
+    }
+}
+@media only screen and (max-width: 768px) {
+    #uc-emergency > .layout-title {
+        position: relative;
+    }
+}

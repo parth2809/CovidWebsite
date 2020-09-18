@@ -1,5 +1,8 @@
 # UCSD/HDSI Covid-19 Website
 
+## IMPORTANT
+To run this properly, you will need to host this on a server. Opening the HTML in a browser will NOT display the charts properly. Either use VS code "Live Server" extension, `python3 -m http.server 8080` followed by visiting 127.0.0.1:8080 to open a server, or some other server of your choosing.
+
 ## TODO Major
 Right now, in order to convert the data from the supplied CSV to a chart friendly JSON, we need to run `python3 generate.py` (you'll need pandas) in order to generate the df.json file needed. 
 <br>

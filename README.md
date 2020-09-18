@@ -8,6 +8,8 @@ We have one of two options: <br> <br>
 1. We can manually fetch the information weekly and run the Python script
 2. We can create a CRON job? IDK
 3. See Below
+<br>
+<hr>
 Right now, in order to convert the data from the supplied CSV to a chart friendly JSON, we need to run `python3 generate.py` (you'll need pandas) in order to generate the df.json file needed. 
 <br>
 <br>

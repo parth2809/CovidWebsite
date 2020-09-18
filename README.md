@@ -13,10 +13,10 @@ We have one of two options: <br> <br>
 Right now, in order to convert the data from the supplied CSV to a chart friendly JSON, we need to run `python3 generate.py` (you'll need pandas) in order to generate the df.json file needed. 
 <br>
 <br>
-If you could, can you rewrite *datasets/generate.py* to be in JS entirely instead. Ideally, it will download the latest data from their GitHub, convert with the afformentioned script you can create, and then you can pipe that to the js/map.js function at the top. 
+If you could, can you rewrite *datasets/generate.py* to be in JS entirely instead. Ideally, it will download the latest data from their GitHub, convert with the afformentioned script you can create, and then you can store that to js/map.js . 
 <br>
 <br>
-Next, find a WP plugin or something that will allow us to scheudle a job that runs the JSON daily or weekly or whatever. That would make it a very low maintenence page.
+Next, find a WP plugin or something that will allow us to scheudle a job that runs the JS script daily or weekly or whatever. That would make it a very low maintenence page.
 <br>
 <br>
 Probably want to be in a call to discuss this if wanted, but this can be a down the line thing.

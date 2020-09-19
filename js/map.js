@@ -1,13 +1,9 @@
-Highcharts.getJSON('http://127.0.0.1:8080/datasets/df.json', function (data) {
+var week1 = [];
+var week2 = [];
+var week3 = [];
+var week4 = [];
 
-
-    // Make codes uppercase to match the map data
-    data.forEach(function (p) {
-        p.code = p.code.toUpperCase();
-        p.value=p.week1;
-        p.array=[[1,p.week1], [2,p.week2], [3,p.week3], [4,p.week4]]
-    });
-
+function chartMap(data) {
     // Instantiate the map
     Highcharts.mapChart('map', {
 
@@ -40,7 +36,6 @@ Highcharts.getJSON('http://127.0.0.1:8080/datasets/df.json', function (data) {
 
         colorAxis: {
             min: 1,
-            type: 'logarithmic',
             minColor: '#EEEEFF',
             maxColor: '#000022',
             stops: [
@@ -51,11 +46,8 @@ Highcharts.getJSON('http://127.0.0.1:8080/datasets/df.json', function (data) {
         },
 
         series: [{
-            animation: {
-                duration: 1000
-            },
             data: data,
-            joinBy: ['postal-code', 'code'],
+            joinBy: ['hc-key', 'code'],
             dataLabels: {
                 enabled: true,
                 color: '#FFFFFF',
@@ -70,4 +62,37 @@ Highcharts.getJSON('http://127.0.0.1:8080/datasets/df.json', function (data) {
             }
         }]
     });
-});
+};
+
+async function loadJSON(path) {
+	let response = await fetch(path);
+	let dataset = await response.json();
+	return dataset;
+}
+
+function selectType(chart) {
+    let dfPromise;
+    if (chart == 0) {
+        dfPromise = loadJSON('http://192.168.0.130:8080/datasets/df_inc.json')
+    }
+    else {
+        dfPromise = loadJSON('http://192.168.0.130:8080/datasets/df_cum.json')
+    }
+
+    week1 = [];
+    week2 = [];
+    week3 = [];
+    week4 = [];
+
+    dfPromise.then(function (df) {
+        for (const state of df) {
+            week1.push({"code": "us-" + state["code"].toLowerCase(),"value": state["week1"]});
+            week2.push({"code": "us-" + state["code"].toLowerCase(),"value": state["week2"]});
+            week3.push({"code": "us-" + state["code"].toLowerCase(),"value": state["week3"]});
+            week4.push({"code": "us-" + state["code"].toLowerCase(),"value": state["week4"]});
+        };
+        chartMap(week3)
+    });
+}
+
+selectType(1)

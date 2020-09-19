@@ -1,9 +1,11 @@
-Highcharts.getJSON('http://127.0.0.1:5500/datasets/df.json', function (data) {
+Highcharts.getJSON('http://127.0.0.1:8080/datasets/df.json', function (data) {
 
 
     // Make codes uppercase to match the map data
     data.forEach(function (p) {
         p.code = p.code.toUpperCase();
+        p.value=p.week1;
+        p.array=[[1,p.week1], [2,p.week2], [3,p.week3], [4,p.week4]]
     });
 
     // Instantiate the map
@@ -63,7 +65,7 @@ Highcharts.getJSON('http://127.0.0.1:5500/datasets/df.json', function (data) {
             borderWidth: 0.2,
             name: 'Point Estimate',
             tooltip: {
-                pointFormat: '{point.code}: {point.week1}',
+                pointFormat: '{point.code}: {point.value}',
                 valueDecimals: 2,
             }
         }]

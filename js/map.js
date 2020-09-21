@@ -42,6 +42,9 @@ function chartMap(data, week) {
         mapNavigation: {
             enabled: true
         },
+        credits: {
+            enabled: false
+        },    
 
         colorAxis: {
             min: 1,
@@ -57,6 +60,13 @@ function chartMap(data, week) {
 
         series: [{
             data: data,
+            point: {
+                events: {
+                    click: function () {
+                        chartLine((activeType > 0 ? states_inc : states_cum), this.code.slice(3).toUpperCase());
+                    },
+                },
+            },
             joinBy: ['hc-key', 'code'],
             dataLabels: {
                 enabled: true,
@@ -74,10 +84,64 @@ function chartMap(data, week) {
     });
 };
 
+function chartLine(states_df, state_code) {
+    state = [{"name": state_code, "data": states_df[state_code] }]
+    Highcharts.chart('states-line', {
+
+        title: {
+            text: 'Point Estimates for ' + (activeType > 0 ? 'Incidental' : 'Cumulative') + ' Deaths for ' + state_code
+            + ' Ahead 9/7/20'
+        },
+    
+        yAxis: {
+            title: {
+                text: (activeType > 0 ? 'Incidental' : 'Cumulative') + ' Deaths'
+            }
+        },
+
+        legend: {
+            layout: 'vertical',
+            align: 'right',
+            verticalAlign: 'middle'
+        },
+    
+        plotOptions: {
+            series: {
+                label: {
+                    connectorAllowed: false
+                },
+                pointStart:1,
+            }
+        },
+    
+        series: state,
+        credits: {
+            enabled: false
+        },
+    
+    
+        responsive: {
+            rules: [{
+                condition: {
+                    maxWidth: 500
+                },
+                chartOptions: {
+                    legend: {
+                        layout: 'horizontal',
+                        align: 'center',
+                        verticalAlign: 'bottom'
+                    }
+                }
+            }]
+        }
+    
+    });
+}
+
 async function loadJSON(path) {
 	let response = await fetch(path);
-	let dataset = await response.json();
-	return dataset;
+	let df = await response.json();
+	return df;
 }
 
 function directState(week) {
@@ -123,8 +187,10 @@ function setActiveType(level) {
 }
 
 
-dfPromiseInc = loadJSON('http://192.168.0.130:8080/datasets/df_inc.json')
-dfPromiseCum = loadJSON('http://192.168.0.130:8080/datasets/df_cum.json')
+var dfPromiseInc = loadJSON('http://192.168.0.130:8080/datasets/df_inc.json')
+var dfPromiseCum = loadJSON('http://192.168.0.130:8080/datasets/df_cum.json')
+var states_inc = {}
+var states_cum = {}
 
 // Will wait for and then append to respective array
 dfPromiseInc.then(function (df) {
@@ -134,8 +200,10 @@ dfPromiseInc.then(function (df) {
         week2_inc.push({"code": "us-" + state["code"].toLowerCase(),"value": state["week2"]});
         week3_inc.push({"code": "us-" + state["code"].toLowerCase(),"value": state["week3"]});
         week4_inc.push({"code": "us-" + state["code"].toLowerCase(),"value": state["week4"]});
+        states_inc[state["code"]] = [state["week1"], state["week2"], state["week3"], state["week4"]]
     };
     directState(1); // Draws the map
+    chartLine(states_inc, "CA")
 });
 
 dfPromiseCum.then(function (df) {
@@ -145,5 +213,7 @@ dfPromiseCum.then(function (df) {
         week2_cum.push({"code": "us-" + state["code"].toLowerCase(),"value": state["week2"]});
         week3_cum.push({"code": "us-" + state["code"].toLowerCase(),"value": state["week3"]});
         week4_cum.push({"code": "us-" + state["code"].toLowerCase(),"value": state["week4"]});
+        states_cum[state["code"]] = [state["week1"], state["week2"], state["week3"], state["week4"]]
     };
 });
+

@@ -187,8 +187,8 @@ function setActiveType(level) {
 }
 
 
-var dfPromiseInc = loadJSON('http://192.168.0.130:8080/datasets/df_inc.json')
-var dfPromiseCum = loadJSON('http://192.168.0.130:8080/datasets/df_cum.json')
+var dfPromiseInc = loadJSON('datasets/df_inc.json')
+var dfPromiseCum = loadJSON('datasets/df_cum.json')
 var states_inc = {}
 var states_cum = {}
 

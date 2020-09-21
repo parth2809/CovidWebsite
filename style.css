@@ -3,6 +3,11 @@
     height:60px;
 }
 
+#graph {
+    height: 500px;
+    width: 800px;
+    margin: 0 auto; 
+}
 
 #map {
     height: 500px;

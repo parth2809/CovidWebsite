@@ -1,7 +1,7 @@
 import pandas as pd
 import json
 dateparse = lambda x: pd.datetime.strptime(x, '%Y-%m-%d')
-df = pd.read_csv('truth-Cumulative Deaths.csv', parse_dates=['date'], date_parser=dateparse)
+df = pd.read_csv('truth-Incident Deaths.csv', parse_dates=['date'], date_parser=dateparse)
 df = df[df['location']!='US']
 df['location'] = df['location'].astype(int)
 df = df[(df['date'] <= '09/07/2020') & (df['date'] >= '01/27/2020')]
@@ -24,5 +24,5 @@ for i in range(len(unique_states)):
         if j%7==0:
             dictionary[unique_dates[j]]=float(df_temp.iloc[j,3])
     json_object_list.append(dictionary)
-with open("df_truth_cum.json", "w") as outfile: 
+with open("df_truth_inc.json", "w") as outfile: 
         json.dump(json_object_list, outfile, indent=4) 

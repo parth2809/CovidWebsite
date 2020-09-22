@@ -9,7 +9,8 @@
 }
 
 #map {
-    height: 100%;
+    height: 500px;
+    width: 800px;
     margin: 0 auto; 
 }
 
@@ -18,6 +19,8 @@
     margin: 0 auto;
 
 }
+
+
 .loading {
     margin-top: 10em;
     text-align: center;

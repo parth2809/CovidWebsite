@@ -61,35 +61,33 @@
         
         <div class="row no-gutters">
             <div class="col-md-2">
-
+                <h4>Deaths</h4>
                 <div class="btn-group btn-group-toggle" data-toggle="buttons">
-                    <label class="btn btn-secondary active">
-                        <input type="radio" name="inc-deaths" id="inc-deaths" autocomplete="off" onclick="updateGraphs(1);;" checked> Incidental Deaths
-                    </label>
-                    <label class="btn btn-secondary">
-                        <input type="radio" name="cum-deaths" id="cum-deaths" autocomplete="off" onclick="updateGraphs(0);"> Cumulative Deaths
-                    </label>
+                    <label class="btn active-button btn-primary active">
+                        <input type="radio" name="inc-deaths" id="inc-deaths" autocomplete="off" onclick="updateGraphs(1);;" checked>Incidental</label>
+                    <label class="btn btn-primary">
+                        <input type="radio" name="cum-deaths" id="cum-deaths" autocomplete="off" onclick="updateGraphs(0);">Cumulative</label>
                   </div>
 
                 <br /><br />
-
+                <h4>Prediction in Weeks</h4>
                 <div class="btn-group btn-group-toggle" data-toggle="buttons">
-                    <label class="btn btn-secondary active">
-                        <input type="radio" name="week1" id="week1" autocomplete="off" onclick="updateUSMapWeekDisplay(1);" checked> Week 1
+                    <label class="btn btn-primary active">
+                        <input type="radio" name="week1" id="week1" autocomplete="off" onclick="updateUSMapWeekDisplay(1);" checked> 1
                     </label>
-                    <label class="btn btn-secondary">
-                        <input type="radio" name="week2" id="week2" autocomplete="off" onclick="updateUSMapWeekDisplay(2);"> Week 2
+                    <label class="btn btn-primary">
+                        <input type="radio" name="week2" id="week2" autocomplete="off" onclick="updateUSMapWeekDisplay(2);"> 2
                     </label>
-                    <label class="btn btn-secondary">
-                        <input type="radio" name="week3" id="week3" autocomplete="off" onclick="updateUSMapWeekDisplay(3);"> Week 3
+                    <label class="btn btn-primary">
+                        <input type="radio" name="week3" id="week3" autocomplete="off" onclick="updateUSMapWeekDisplay(3);"> 3
                     </label>
-                    <label class="btn btn-secondary">
-                        <input type="radio" name="week4" id="week4" autocomplete="off" onclick="updateUSMapWeekDisplay(4);"> Week 4
+                    <label class="btn btn-primary">
+                        <input type="radio" name="week4" id="week4" autocomplete="off" onclick="updateUSMapWeekDisplay(4);"> 4
                       </label>
                   </div>
 
             </div>
-            <div class="col-lg-7 col-md-12">
+            <div class="col-xl-7 col-lg-12">
                 <!-- US Map Chart lives here -->
                 
                 <div id="map" style="align: center; width: 90vh;"></div>

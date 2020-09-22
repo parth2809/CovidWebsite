@@ -2,6 +2,8 @@ var activeType = 1 //1 is Incidental, 0 is Cumulative
 var activeWeek = 1 // Which week to display first (1-4)
 var selectedState = "CA" // Which state to display default information for
 
+var lineColor = "#182B49"
+
 var dfPromiseInc = loadJSON('datasets/df_inc.json') // Contains the incremental predictions
 var dfPromiseCum = loadJSON('datasets/df_cum.json') // Contains the cumulative predictions
 var dfPromiseIncTruth = loadJSON('datasets/df_truth_inc.json') // Contains incremental historical data
@@ -71,12 +73,12 @@ function chartMap(data, week) {
         colorAxis: {
             min: 1,
             type: 'linear',
-            minColor: '#EEEEFF',
-            maxColor: '#000022',
+            minColor: '#EEEEEE',
+            maxColor: '#222222',
             stops: [
-                [0, '#EFEFFF'],
-                [0.67, '#4444FF'],
-                [1, '#000022']
+                [0, '#EEEEEE'],
+                [0.67, '#444444'],
+                [1, '#222222']
             ],
         },
 
@@ -150,6 +152,7 @@ function chartLine(states_df, state_code) {
                     connectorAllowed: false
                 },
                 pointStart:1,
+                color: lineColor,
             }
         },
     
@@ -215,7 +218,7 @@ function chartLineDetailed(states_true_df, state_code) {
                 label: {
                     connectorAllowed: false
                 },
-
+                color: lineColor,
             }
         },
     

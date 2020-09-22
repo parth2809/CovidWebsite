@@ -65,3 +65,34 @@
         position: relative;
     }
 }
+
+@media only screen and (max-width: 1200px) {
+    #states-line {
+        width: 80% !important;
+        align-content: center;
+        float:center;
+    }
+  }
+
+@media only screen and (max-width: 576px) {
+    #footer-page {
+        width: 100% !important;
+        display: none;
+    }
+
+    #footer-padder {
+        display: none;
+    }
+
+    #about-section > div {
+        padding: 0px 0px 0px 0px !important;
+    }
+
+    #states-line {
+        width: 100% !important;
+    }
+
+    #graph {
+        width: 100% !important;
+    }
+}

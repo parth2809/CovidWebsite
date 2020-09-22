@@ -58,67 +58,57 @@
         </div>
 
         <br />
-        
         <div class="row no-gutters">
-            <div class="col-2 border">
-
-                <div class="btn-group btn-group-toggle" data-toggle="buttons">
-                    <label class="btn btn-secondary active">
-                        <input type="radio" name="inc-deaths" id="inc-deaths" autocomplete="off" onclick="setActiveType(1); directState(1);" checked> Incidental Deaths
-                    </label>
-                    <label class="btn btn-secondary">
-                        <input type="radio" name="cum-deaths" id="cum-deaths" autocomplete="off" onclick="setActiveType(0); directState(1);"> Cumulative Deaths
-                    </label>
-                  </div>
-
-                <br /><br />
-
-                <div class="btn-group btn-group-toggle" data-toggle="buttons">
-                    <label class="btn btn-secondary active">
-                        <input type="radio" name="week1" id="week1" autocomplete="off" onclick="directState(1);" checked> Week 1
-                    </label>
-                    <label class="btn btn-secondary">
-                        <input type="radio" name="week2" id="week2" autocomplete="off" onclick="directState(2);"> Week 2
-                    </label>
-                    <label class="btn btn-secondary">
-                        <input type="radio" name="week3" id="week3" autocomplete="off" onclick="directState(3);"> Week 3
-                    </label>
-                    <label class="btn btn-secondary">
-                        <input type="radio" name="week4" id="week4" autocomplete="off" onclick="directState(4);"> Week 4
-                      </label>
-                  </div>
-
+            <div class="col-3 text-center">
+                <div class="d-flex justify-content-center">
+                    <div class="btn-group btn-group-toggle" data-toggle="buttons">
+                        <label class="btn btn-secondary active">
+                            <input type="radio" name="inc-deaths" id="inc-deaths" autocomplete="off" onclick="updateGraphs(1);;" checked> Incidental Deaths
+                        </label>
+                        <label class="btn btn-secondary">
+                            <input type="radio" name="cum-deaths" id="cum-deaths" autocomplete="off" onclick="updateGraphs(0);"> Cumulative Deaths
+                        </label>
+                      </div>
+                 </div>
+                </br>
+                <div class="d-flex justify-content-center">
+                    <div class="btn-group btn-group-toggle" data-toggle="buttons">
+                        <label class="btn btn-secondary active">
+                            <input type="radio" name="week1" id="week1" autocomplete="off" onclick="updateUSMapWeekDisplay(1);" checked> Week 1
+                        </label>
+                        <label class="btn btn-secondary">
+                            <input type="radio" name="week2" id="week2" autocomplete="off" onclick="updateUSMapWeekDisplay(2);"> Week 2
+                        </label>
+                        <label class="btn btn-secondary">
+                            <input type="radio" name="week3" id="week3" autocomplete="off" onclick="updateUSMapWeekDisplay(3);"> Week 3
+                        </label>
+                        <label class="btn btn-secondary">
+                            <input type="radio" name="week4" id="week4" autocomplete="off" onclick="updateUSMapWeekDisplay(4);"> Week 4
+                          </label>
+                      </div>
+                 </div>
+                 
             </div>
-            <div class="col-7">
-                <!-- US Map Chart lives here -->
-                
-                <div id="map" class="border" style="align: center; width: 90vh;"></div>
+            <div class="class=col-6" style="padding-left: 2%; scroll-padding-right: 2%;">
+                <div id="map" style="align: right; width: 100%;"></div>
             </div>
-            <div class="col-3">
-                <div id="states-line" class="border" style="align: right; width: 100%;"></div>
+            <div class="col-3" style="padding-left: 2%; padding-right: 2%;">
+                <div id="states-line"></div>
             </div>
-        </div>
-
-        <div class="row">
-            <!-- Daily Chart will live here -->
         </div>
         <br />
 
-        
-        
         <div class="row">
             <div style="text-align: center; padding: 25px 100px 25px 100px;">
                 <h5>ABOUT THIS PROJECT</h5>
                 <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
             </div>
         </div>     
-        <br />
-        <button onclick="test()">Click me</button>
         <div class="row">
-            <div id="graph" class="border" style="align: center; width: 90vh;"></div>
+        <!-- Daily Chart will live here -->
+            <div id="graph"  style="align: center; width: 60%;"></div>
         </div>
-
-        
+        <br />
     </div>
 
    

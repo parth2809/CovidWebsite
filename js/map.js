@@ -119,7 +119,7 @@ function chartLine(states_df, state_code) {
     Highcharts.chart('states-line', {
 
         title: {
-            text: 'Point Estimates for ' + (activeType > 0 ? 'Incidental' : 'Cumulative') + ' Deaths for ' + state_code
+            text: 'Forecasts for ' + (activeType > 0 ? 'Incidental' : 'Cumulative') + ' Deaths for ' + state_code
             + ' Ahead 9/7/20',
             style: {
                 fontSize: '12px'
@@ -183,7 +183,7 @@ function chartLineDetailed(states_true_df, state_code) {
     Highcharts.chart('graph', {
 
         title: {
-            text: 'Weekly ' + (activeType > 0 ? 'Incidental' : 'Cumulative') + ' Death Forecasts For ' + state_code
+            text: 'Historical Weekly ' + (activeType > 0 ? 'Incidental' : 'Cumulative') + ' Deaths For ' + state_code
         },
     
         yAxis: {

@@ -44,7 +44,7 @@ function chartMap(data, week) {
         title: {
             text: 'Point Estimates for ' + (activeType > 0 ? 'Incidental' : 'Cumulative') + ' Deaths ' + 
             week + (week > 1 ? ' Weeks' : ' Week')
-            + ' Ahead 9/7/20'
+            + ' Ahead 9/7/20',
         },
 
         exporting: {
@@ -120,12 +120,21 @@ function chartLine(states_df, state_code) {
 
         title: {
             text: 'Point Estimates for ' + (activeType > 0 ? 'Incidental' : 'Cumulative') + ' Deaths for ' + state_code
-            + ' Ahead 9/7/20'
+            + ' Ahead 9/7/20',
+            style: {
+                fontSize: '12px'
+            }
         },
     
         yAxis: {
             title: {
                 text: (activeType > 0 ? 'Incidental' : 'Cumulative') + ' Deaths'
+            }
+        },
+
+        xAxis: {
+            title: {
+                text: "Week Number"
             }
         },
 

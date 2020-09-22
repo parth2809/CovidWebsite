@@ -59,7 +59,6 @@ function chartMap(data, week) {
             backgroundColor: 'rgba(255,255,255,0.85)',
             floating: false,
             verticalAlign: 'middle',
-            y: 20,
         },
 
         mapNavigation: {

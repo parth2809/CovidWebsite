@@ -4,15 +4,19 @@
 }
 
 #graph {
-    height: 500px;
-    width: 800px;
+    height: 25rem;
     margin: 0 auto; 
 }
 
 #map {
-    height: 500px;
-    width: 800px;
+    height: 100%;
     margin: 0 auto; 
+}
+
+#states-line {
+    height: 20rem;
+    margin: 0 auto;
+
 }
 .loading {
     margin-top: 10em;

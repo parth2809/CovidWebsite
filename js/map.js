@@ -1,15 +1,37 @@
 var activeType = 1 //1 is Incidental, 0 is Cumulative
+var activeWeek = 1 // Which week to display first (1-4)
+var selectedState = "CA" // Which state to display default information for
+
+var dfPromiseInc = loadJSON('datasets/df_inc.json') // Contains the incremental predictions
+var dfPromiseCum = loadJSON('datasets/df_cum.json') // Contains the cumulative predictions
+var dfPromiseIncTruth = loadJSON('datasets/df_truth_inc.json') // Contains incremental historical data
+var dfPromiseCumTruth = loadJSON('datasets/df_truth_cum.json') // Contains cumulative historical data
 
 var week1_inc = [];
 var week2_inc = [];
 var week3_inc = [];
 var week4_inc = [];
+var states_truth_inc = {};
 
 var week1_cum = [];
 var week2_cum = [];
 var week3_cum = [];
 var week4_cum = [];
+var states_truth_cum = {};
 
+var weekArray = [];
+var states_inc = {};
+var states_cum = {};
+
+
+// Loads JSON objects into promise objects
+async function loadJSON(path) {
+	let response = await fetch(path);
+	let df = await response.json();
+	return df;
+};
+
+// Charts the USA Map
 function chartMap(data, week) {
     // Draws the map, using weekly data and the given week
     Highcharts.mapChart('map', {
@@ -31,12 +53,13 @@ function chartMap(data, week) {
         },
 
         legend: {
-            layout: 'horizontal',
+            layout: 'vertical',
+            align: 'right',
             borderWidth: 0,
             backgroundColor: 'rgba(255,255,255,0.85)',
-            floating: true,
-            verticalAlign: 'top',
-            y: 20
+            floating: false,
+            verticalAlign: 'middle',
+            y: 20,
         },
 
         mapNavigation: {
@@ -62,14 +85,21 @@ function chartMap(data, week) {
             data: data,
             point: {
                 events: {
+                    mouseOver: function () {
+                        //selectedState = this.code.slice(3).toUpperCase()
+                        //chartLine((activeType > 0 ? states_inc : states_cum), selectedState);
+                        //chartLineDetailed((activeType > 0 ? states_truth_inc : states_truth_cum), selectedState);
+                    },
                     click: function () {
-                        chartLine((activeType > 0 ? states_inc : states_cum), this.code.slice(3).toUpperCase());
+                        selectedState = this.code.slice(3).toUpperCase()
+                        chartLine((activeType > 0 ? states_inc : states_cum), selectedState);
+                        chartLineDetailed((activeType > 0 ? states_truth_inc : states_truth_cum), selectedState);
                     },
                 },
             },
             joinBy: ['hc-key', 'code'],
             dataLabels: {
-                enabled: true,
+                enabled: false,
                 color: '#FFFFFF',
                 format: '{point.name}',
             },
@@ -84,6 +114,7 @@ function chartMap(data, week) {
     });
 };
 
+// Charts the Weekly Forecast Chart
 function chartLine(states_df, state_code) {
     state = [{"name": state_code, "data": states_df[state_code] }]
     Highcharts.chart('states-line', {
@@ -136,18 +167,80 @@ function chartLine(states_df, state_code) {
         }
     
     });
-}
+};
 
-async function loadJSON(path) {
-	let response = await fetch(path);
-	let df = await response.json();
-	return df;
-}
+// Charts the Detailed Historical Chart
+function chartLineDetailed(states_true_df, state_code) {
+    state_true = [{"name": state_code, "data": states_true_df[state_code] }]
+    Highcharts.chart('graph', {
 
-function directState(week) {
+        title: {
+            text: 'Weekly ' + (activeType > 0 ? 'Incidental' : 'Cumulative') + ' Death Forecasts For ' + state_code
+        },
+    
+        yAxis: {
+            title: {
+                text: 'Deaths'
+            }
+        },
+
+        xAxis: {
+            type: "datetime",
+            labels: {
+              formatter: function() {
+                return Highcharts.dateFormat('%Y/%b/%e', this.key);
+              }
+            },
+            title: {
+                text: 'Date'
+            }
+        },
+
+        legend: {
+            layout: 'vertical',
+            align: 'right',
+            verticalAlign: 'middle'
+        },
+    
+        plotOptions: {
+            series: {
+                label: {
+                    connectorAllowed: false
+                },
+
+            }
+        },
+    
+        series: state_true,
+        credits: {
+            enabled: false
+        },
+    
+    
+        responsive: {
+            rules: [{
+                condition: {
+                    maxWidth: 500
+                },
+                chartOptions: {
+                    legend: {
+                        layout: 'horizontal',
+                        align: 'center',
+                        verticalAlign: 'bottom'
+                    }
+                }
+            }]
+        }
+    
+    });
+};
+
+// Updates the US Map (used for updating week number, also called in updateGraphs)
+function updateUSMapWeekDisplay(week) {
     // sets and updates the chart with the appropriate type and week number, and then draws the map
     // activeType determines incidental or cumulative
     // week determines week number
+    activeWeek = week
     if (activeType == 0) {
         switch (week) {
             case 1:
@@ -179,20 +272,28 @@ function directState(week) {
                 break;
         }
     }
-}
+};
 
-function setActiveType(level) {
+// Updates all of the graphs (used when either type or location is changed)
+function updateGraphs(level) {
     // Sets the activeType (1 is Incidental, 0 is Cumulative)
     activeType = level;
-}
+    updateUSMapWeekDisplay(activeWeek);
 
+    if (activeType == 1) {
+        stateType = states_inc;
+        stateTruthType = states_truth_inc;
+    } else {
+        stateType = states_cum;
+        stateTruthType = states_truth_cum;
+    }
 
-var dfPromiseInc = loadJSON('datasets/df_inc.json')
-var dfPromiseCum = loadJSON('datasets/df_cum.json')
-var states_inc = {}
-var states_cum = {}
+    chartLine(stateType, selectedState)
+    chartLineDetailed(stateTruthType, selectedState);
+};
 
-// Will wait for and then append to respective array
+// Promise functions read from the JSON object in loadJSON and then add them to arrays,
+// Before finally generating the lines
 dfPromiseInc.then(function (df) {
     // Incidentals
     for (const state of df) {
@@ -202,8 +303,8 @@ dfPromiseInc.then(function (df) {
         week4_inc.push({"code": "us-" + state["code"].toLowerCase(),"value": state["week4"]});
         states_inc[state["code"]] = [state["week1"], state["week2"], state["week3"], state["week4"]]
     };
-    directState(1); // Draws the map
-    chartLine(states_inc, "CA")
+    updateUSMapWeekDisplay(1); // Draws the map
+    chartLine(states_inc, selectedState)
 });
 
 dfPromiseCum.then(function (df) {
@@ -217,3 +318,49 @@ dfPromiseCum.then(function (df) {
     };
 });
 
+dfPromiseIncTruth.then(function (df) {
+    for (let key in df[0]){
+        if(key=="code"){
+            continue;
+        }else{
+            weekArray.push([]);
+        }
+    }
+    for (const state_true of df) {
+        for(let key in state_true){
+            if(key=="code"){
+                states_truth_inc[state_true["code"]]=[]
+                continue;
+            }
+            else{
+                states_truth_inc[state_true["code"]].push([key,state_true[key]])
+            }
+        }
+    };
+    chartLineDetailed(states_truth_inc, selectedState);
+    
+});
+
+dfPromiseCumTruth.then(function (df) {
+    console.log(df)
+    for (let key in df[0]){
+        if(key=="code"){
+            continue;
+        }else{
+            weekArray.push([]);
+        }
+    }
+    // Cumulative
+    for (const state_true of df) {
+        for(let key in state_true){
+            if(key=="code"){
+                states_truth_cum[state_true["code"]]=[]
+                continue;
+            }
+            else{
+                states_truth_cum[state_true["code"]].push([key,state_true[key]])
+            }
+        }
+    };
+    
+});

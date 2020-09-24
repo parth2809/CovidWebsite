@@ -3,7 +3,7 @@ import datetime
 import numpy as np
 import json
 
-df = pd.read_csv('truth-Incident Deaths.csv', 
+df = pd.read_csv('truth-Cumulative Deaths.csv', 
                  dtype={"date": str, "location": str, "location_name": "str", "value": "float"})
 df = df[df['location']!='US']
 df['location'] = df['location'].astype(int)
@@ -28,5 +28,5 @@ for state in df_export['abbreviation'].unique():
     export[state] = state_data.values.tolist()
 
 json_object = json.dumps(export, indent = 4)   
-with open("df_truth_inc.json", "w") as outfile:  
+with open("df_truth_cum.json", "w") as outfile:  
     json.dump(export, outfile, indent=4) 

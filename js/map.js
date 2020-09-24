@@ -72,7 +72,7 @@ function chartMap(data, week) {
 
         colorAxis: {
             min: 1,
-            type: 'linear',
+            type: 'logarithmic',
             minColor: '#EEEEEE',
             maxColor: '#222222',
             stops: [
@@ -93,7 +93,7 @@ function chartMap(data, week) {
                     },
                     click: function () {
                         selectedState = this.code.slice(3).toUpperCase()
-                        chartLine((activeType > 0 ? states_inc : states_cum), selectedState);
+                        chartForecastLine((activeType > 0 ? states_inc : states_cum), selectedState);
                         chartLineDetailed((activeType > 0 ? states_truth_inc : states_truth_cum), selectedState);
                     },
                 },
@@ -116,8 +116,11 @@ function chartMap(data, week) {
 };
 
 // Charts the Weekly Forecast Chart
-function chartLine(states_df, state_code) {
-    state = [{"name": state_code, "data": states_df[state_code] }]
+function chartForecastLine(states_df, state_code) {
+    state = [{
+        "name": state_code, 
+        "data": [states_df[state_code][0],  states_df[state_code][1]]
+    }];
     Highcharts.chart('states-line', {
 
         title: {
@@ -182,7 +185,11 @@ function chartLine(states_df, state_code) {
 
 // Charts the Detailed Historical Chart
 function chartLineDetailed(states_true_df, state_code) {
-    state_true = [{"name": state_code, "data": states_true_df[state_code] }]
+    state_true = [{
+        "name": state_code, 
+        "data": states_true_df[state_code] 
+    }]
+    console.log(states_true_df)
     Highcharts.chart('graph', {
 
         title: {
@@ -299,7 +306,7 @@ function updateGraphs(level) {
         stateTruthType = states_truth_cum;
     }
 
-    chartLine(stateType, selectedState)
+    chartForecastLine(stateType, selectedState)
     chartLineDetailed(stateTruthType, selectedState);
 };
 
@@ -315,7 +322,7 @@ dfPromiseInc.then(function (df) {
         states_inc[state["code"]] = [state["week1"], state["week2"], state["week3"], state["week4"]]
     };
     updateUSMapWeekDisplay(1); // Draws the map
-    chartLine(states_inc, selectedState)
+    chartForecastLine(states_inc, selectedState)
 });
 
 dfPromiseCum.then(function (df) {
@@ -330,48 +337,11 @@ dfPromiseCum.then(function (df) {
 });
 
 dfPromiseIncTruth.then(function (df) {
-    for (let key in df[0]){
-        if(key=="code"){
-            continue;
-        }else{
-            weekArray.push([]);
-        }
-    }
-    for (const state_true of df) {
-        for(let key in state_true){
-            if(key=="code"){
-                states_truth_inc[state_true["code"]]=[]
-                continue;
-            }
-            else{
-                states_truth_inc[state_true["code"]].push([key,state_true[key]])
-            }
-        }
-    };
+    states_truth_inc = df
     chartLineDetailed(states_truth_inc, selectedState);
     
 });
 
 dfPromiseCumTruth.then(function (df) {
-    console.log(df)
-    for (let key in df[0]){
-        if(key=="code"){
-            continue;
-        }else{
-            weekArray.push([]);
-        }
-    }
-    // Cumulative
-    for (const state_true of df) {
-        for(let key in state_true){
-            if(key=="code"){
-                states_truth_cum[state_true["code"]]=[]
-                continue;
-            }
-            else{
-                states_truth_cum[state_true["code"]].push([key,state_true[key]])
-            }
-        }
-    };
-    
+    states_truth_cum = df
 });

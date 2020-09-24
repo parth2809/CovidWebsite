@@ -119,7 +119,7 @@ function chartMap(data, week) {
 function chartForecastLine(states_df, state_code) {
     state = [{
         "name": state_code, 
-        "data": [states_df[state_code][0],  states_df[state_code][1]]
+        "data": states_df[state_code]
     }];
     Highcharts.chart('states-line', {
 

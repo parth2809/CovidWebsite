@@ -48,7 +48,7 @@
         </div>
         <div class="row">
             <div class="col d-flex justify-content-center text-center">
-                <h4>View the data and prediction in each region by clicking the map</h4>
+                <h3>View the data and prediction for each state by clicking on the corresponding state</h3>
             </div>
         </div>
         <div class="row">
@@ -58,73 +58,113 @@
         </div>
 
         <br />
-        <div class="row no-gutters">
-            <div class="col-3 text-center">
-                <div class="d-flex justify-content-center">
+        
+        <div class="row no-gutters ">
+            <div class="col-xl-3 col-lg-12 text-center">
+                <div class="justify-content-center">
+                    <h4>Deaths</h4>
                     <div class="btn-group btn-group-toggle" data-toggle="buttons">
-                        <label class="btn btn-secondary active">
-                            <input type="radio" name="inc-deaths" id="inc-deaths" autocomplete="off" onclick="updateGraphs(1);;" checked> Incidental Deaths
-                        </label>
-                        <label class="btn btn-secondary">
-                            <input type="radio" name="cum-deaths" id="cum-deaths" autocomplete="off" onclick="updateGraphs(0);"> Cumulative Deaths
-                        </label>
-                      </div>
-                 </div>
-                </br>
-                <div class="d-flex justify-content-center">
-                    <div class="btn-group btn-group-toggle" data-toggle="buttons">
-                        <label class="btn btn-secondary active">
-                            <input type="radio" name="week1" id="week1" autocomplete="off" onclick="updateUSMapWeekDisplay(1);" checked> Week 1
-                        </label>
-                        <label class="btn btn-secondary">
-                            <input type="radio" name="week2" id="week2" autocomplete="off" onclick="updateUSMapWeekDisplay(2);"> Week 2
-                        </label>
-                        <label class="btn btn-secondary">
-                            <input type="radio" name="week3" id="week3" autocomplete="off" onclick="updateUSMapWeekDisplay(3);"> Week 3
-                        </label>
-                        <label class="btn btn-secondary">
-                            <input type="radio" name="week4" id="week4" autocomplete="off" onclick="updateUSMapWeekDisplay(4);"> Week 4
-                          </label>
-                      </div>
-                 </div>
-                 
+                        <label class="btn active-button btn-primary active">
+                            <input type="radio" name="inc-deaths" id="inc-deaths" autocomplete="off" onclick="updateGraphs(1);;" checked>Incidental</label>
+                        <label class="btn btn-primary">
+                            <input type="radio" name="cum-deaths" id="cum-deaths" autocomplete="off" onclick="updateGraphs(0);">Cumulative</label>
+                    </div>
+                </div>
+
+                <h4 style="margin-top: 3%;">Prediction in Weeks</h4>
+                <div class="btn-group btn-group-toggle" data-toggle="buttons">
+                    <label class="btn btn-primary active">
+                        <input type="radio" name="week1" id="week1" autocomplete="off" onclick="updateUSMapWeekDisplay(1);" checked> 1
+                    </label>
+                    <label class="btn btn-primary">
+                        <input type="radio" name="week2" id="week2" autocomplete="off" onclick="updateUSMapWeekDisplay(2);"> 2
+                    </label>
+                    <label class="btn btn-primary">
+                        <input type="radio" name="week3" id="week3" autocomplete="off" onclick="updateUSMapWeekDisplay(3);"> 3
+                    </label>
+                    <label class="btn btn-primary">
+                        <input type="radio" name="week4" id="week4" autocomplete="off" onclick="updateUSMapWeekDisplay(4);"> 4
+                      </label>
+                  </div>
+
             </div>
-            <div class="class=col-6" style="padding-left: 2%; scroll-padding-right: 2%;">
-                <div id="map" style="align: right; width: 100%;"></div>
+            <div class="col-xl-6 col-lg-12">
+                <!-- US Map Chart lives here -->
+                <div id="map" style="align: center; width: 100%;"></div>
             </div>
-            <div class="col-3" style="padding-left: 2%; padding-right: 2%;">
-                <div id="states-line"></div>
+            <div class="col-xl-3 col-lg-12 align-self-center">
+                <div id="states-line"  style="float: center; width: 80%;"></div>
             </div>
         </div>
         <br />
 
-        <div class="row">
-            <div style="text-align: center; padding: 25px 100px 25px 100px;">
-                <h5>ABOUT THIS PROJECT</h5>
-                <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
-            </div>
-        </div>     
+        <hr>
+        
+        <div class="slidecontainer">
+            <input type="range" min="0.05" max="0.95" value="0.95" step="0.05" class="slider" id="myRange">
+            <p>Value: <span id="valueDisplay"></span></p>
+        </div>
+
         <div class="row">
         <!-- Daily Chart will live here -->
-            <div id="graph"  style="align: center; width: 60%;"></div>
+            <div id="graph"  style="align: center; width: 70%;"></div>
         </div>
+
+        <div class="row">
+            <div id="footer-padder" class="col-lg-1 col-md-1"><!-- Filler Col Space on the side--></div>
+            <div id="about-section" class="col-lg-10 col-md-12">
+                <div style="text-align: center; padding: 25px 100px 25px 100px;">
+                    <h3>ABOUT</h3>
+                    <p>To study the spatiotemporal COVID-19 spread, we use the Global Epidemic and Mobility Model (GLEAM), 
+                        an individual-based, stochastic, and spatial epidemic model 
+                        [<a href="https://www.pnas.org/content/106/51/21484">1</a>, 
+                        <a href="https://www.sciencedirect.com/science/article/abs/pii/S1877750310000438?via%3Dihub">2</a>, 
+                        <a href="https://bmcmedicine.biomedcentral.com/articles/10.1186/1741-7015-10-165">3</a>, 
+                        <a href="https://www.pnas.org/content/114/22/E4334">4</a>]. 
+                        GLEAM uses real-world data to perform in-silico simulations of the spatial spread of infectious diseases 
+                        at the global level.  We use the model to analyze the spatiotemporal spread and magnitude of the COVID-19 
+                        epidemic in the continental US. The model generates an ensemble of possible epidemic projections described 
+                        by the number of newly generated infections, times of disease arrival in different regions, 
+                        and the number of traveling infection carriers. Approximate Bayesian Computation is used to estimate the 
+                        posterior distribution of the basic parameters of the model. The calibration of the global model for COVID-19 
+                        is reported in <a href="https://science.sciencemag.org/content/early/2020/03/05/science.aba9757">Science</a>. 
+                        The US model considers the timeline of mitigation interventions that are integrated as 
+                        detailed in the model description published <a href="https://uploads-ssl.webflow.com/58e6558acc00ee8e4536c1f5/5e8bab44f5baae4c1c2a75d2_GLEAM_web.pdf">here</a>. 
+                        The projections will be regularly updated as new data and 
+                        information about mitigation policies become available. Sensitivity analysis on the basic parameters is 
+                        routinely performed along with the baseline projections considered. In order to calculate the number of deaths the 
+                        model uses estimates of COVID-19 severity from available data 
+                        [<a href="https://www.thelancet.com/journals/laninf/article/PIIS1473-3099(20)30243-7/fulltext">5</a>, 
+                        <a href="https://www.nature.com/articles/s41591-020-0822-7">6</a>].</p>
+                        <p><small><strong>Disclaimer: </strong>There are large uncertainties around the transmission of COVID-19, the effectiveness of different policies 
+                            and the extent to which the population is compliant to social distancing measures. The presented material is based 
+                            on modeling scenario assumptions informed by current knowledge of the disease and subject to change as more data 
+                            become available. Future decisions on when and for how long to relax mitigation policies will be informed by 
+                            ongoing surveillance. Additional modeling and data studies are required to assess the level and effectiveness of 
+                            additional non-pharmaceuticals interventions required to lift current social distancing measures.
+                        </small></p>
+                </div>
+            </div>
+            
+        </div>   
         <br />
+
     </div>
 
    
 
     <!-- Footer -->
-    <nav class="navbar navbar-expand navbar-dark" style="background-color: #006A96;">
+    <nav id="footer-page" class="navbar navbar-expand navbar-dark" style="background-color: #006A96;">
         <div class="container">
             <div class="d-flex flex-column flex-wrap flex-fill">
                 <span class="navbar-text mx-auto py-0">IN COLLABORATION WITH</span>
                 <br />
                 <ul class="navbar-nav mb-auto mt-0 mx-auto">
-                    <li class="nav-item active">
+                    <li class="nav-item">
                         <a class="nav-link py-0" href="https://datascience.ucsd.edu/" target="_blank"><img class="logo-collab" src="logos/UCSanDiego_Halicioglu_White.png" alt="HDSI Logo in White"></a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link py-0" href="https://jacobsschool.ucsd.edu/" target="_blank"><img class="logo-collab" src="logos/UCSanDiego_Halicioglu_White.png" alt="JSOE Logo in White"></a>
+                        <a class="nav-link py-0" href="https://jacobsschool.ucsd.edu/" target="_blank"><img class="logo-collab" src="logos/UCSDLogo_JSOE_White.png" alt="JSOE Logo in White"></a>
                     </li>
                 </ul>
                 <br />
@@ -135,8 +175,11 @@
                     <li class="nav-item">
                         <a class="nav-link py-0" href="https://datascience.ucsd.edu/about/contact"  target="_blank">CONTACT US</a>
                     </li>
+                </ul>
+                <br />
+                <ul class="navbar-nav mb-auto mt-0 mx-auto">
                     <li class="nav-item">
-                        <p class="nav-text py-0" style="color: rgba(255,255,255,.5)" >&#169;2020 REGENTS OF THE UNIVERSITY OF CALIFORNIA</p>
+                        <p class=" py-0" style="color: rgba(255,255,255,.5)">&#169;<small> 2020 REGENTS OF THE UNIVERSITY OF CALIFORNIA</small></p>
                     </li>
                 </ul>
             </div>
@@ -145,15 +188,25 @@
 
     <!-- Optional JavaScript -->
     <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+    <script>
+        var slider = document.getElementById("myRange");
+        var output = document.getElementById("valueDisplay");
+        output.innerHTML = slider.value; // Display the default slider value
+
+        // Update the current slider value (each time you drag the slider handle)
+        slider.oninput = function() {
+            output.innerHTML = this.value;
+            updateQuantile(this.value);
+        }
+    </script>
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js" integrity="sha384-9/reFTGAW83EW2RDu2S0VKaIzap3H66lZH81PoYlFhbGU+6BZp6G7niu735Sk7lN" crossorigin="anonymous"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js" integrity="sha384-B4gt1jrGC7Jh4AgTPSdUtOBvfO8shuf57BaghqFfPlYxofvL8/KUEfYiJOMMV+rV" crossorigin="anonymous"></script>
     <script src="https://code.highcharts.com/maps/highmaps.js"></script>
-    <!---script src="https://code.highcharts.com/maps/modules/data.js"></script-->
+    <script src="https://code.highcharts.com/highcharts-more.js"></script>
     <script src="https://code.highcharts.com/maps/modules/exporting.js"></script>
     <script src="https://code.highcharts.com/maps/modules/offline-exporting.js"></script>
     <script src="https://code.highcharts.com/mapdata/countries/us/us-all.js"></script>
-    <script type="text/javascript" src="js/weeklyCharts.js"></script>
     <script type="text/javascript" src="js/map.js"></script>
   </body>
 </html>

@@ -1,27 +1,39 @@
 var activeType = 1 //1 is Incidental, 0 is Cumulative
 var activeWeek = 1 // Which week to display first (1-4)
 var selectedState = "CA" // Which state to display default information for
+var q = "0.95"
 
-var dfPromiseInc = loadJSON('datasets/df_inc.json') // Contains the incremental predictions
-var dfPromiseCum = loadJSON('datasets/df_cum.json') // Contains the cumulative predictions
+var lineColor = "#182B49"
+
+var dfPromiseIncMap = loadJSON('datasets/df_inc.json') // Contains the incremental predictions
+var dfPromiseCumMap = loadJSON('datasets/df_cum.json') // Contains the cumulative predictions
+
 var dfPromiseIncTruth = loadJSON('datasets/df_truth_inc.json') // Contains incremental historical data
 var dfPromiseCumTruth = loadJSON('datasets/df_truth_cum.json') // Contains cumulative historical data
+
+var dfStatesFutureInc = loadJSON('datasets/df_weekly_inc.json');
+var dfStatesFutureCum = loadJSON('datasets/df_weekly_cum.json');
+
+var dfQuantilesInc = loadJSON('datasets/df_quant_inc.json');
+var dfQuantilesCum = loadJSON('datasets/df_quant_cum.json');
 
 var week1_inc = [];
 var week2_inc = [];
 var week3_inc = [];
 var week4_inc = [];
-var states_truth_inc = {};
+var statesTruthInc = {};
+var statesFutureInc;
+var quantilesInc;
 
 var week1_cum = [];
 var week2_cum = [];
 var week3_cum = [];
 var week4_cum = [];
-var states_truth_cum = {};
+var statesTruthCum = {};
+var statesFutureCum;
+var quantilesCum;
 
 var weekArray = [];
-var states_inc = {};
-var states_cum = {};
 
 
 // Loads JSON objects into promise objects
@@ -44,7 +56,7 @@ function chartMap(data, week) {
         title: {
             text: 'Point Estimates for ' + (activeType > 0 ? 'Incidental' : 'Cumulative') + ' Deaths ' + 
             week + (week > 1 ? ' Weeks' : ' Week')
-            + ' Ahead 9/7/20'
+            + ' Ahead 9/7/20',
         },
 
         exporting: {
@@ -71,12 +83,12 @@ function chartMap(data, week) {
         colorAxis: {
             min: 1,
             type: 'linear',
-            minColor: '#EEEEFF',
-            maxColor: '#000022',
+            minColor: '#d0d4da',
+            maxColor: '#101e33',
             stops: [
-                [0, '#EFEFFF'],
-                [0.67, '#4444FF'],
-                [1, '#000022']
+                [0, '#d0d4da'],
+                [0.67, '#182b49'],
+                [1, '#101e33']
             ],
         },
 
@@ -91,8 +103,13 @@ function chartMap(data, week) {
                     },
                     click: function () {
                         selectedState = this.code.slice(3).toUpperCase()
-                        chartLine((activeType > 0 ? states_inc : states_cum), selectedState);
-                        chartLineDetailed((activeType > 0 ? states_truth_inc : states_truth_cum), selectedState);
+                        chartForecastLine((activeType > 0 ? statesFutureInc : statesFutureCum), selectedState);
+                        chartLineHistorical(
+                            (activeType > 0 ? statesTruthInc : statesTruthCum),
+                            (activeType > 0 ? statesFutureInc : statesFutureCum),
+                            (activeType > 0 ? quantilesInc : quantilesCum),
+                            q,
+                            selectedState);
                     },
                 },
             },
@@ -114,15 +131,19 @@ function chartMap(data, week) {
 };
 
 // Charts the Weekly Forecast Chart
-function chartLine(states_df, state_code) {
-    state = [{"name": state_code, "data": states_df[state_code] }]
+function chartForecastLine(states_df, state_code) {
+    state = [{
+        "name": state_code, 
+        "data": states_df[state_code]
+    }];
     Highcharts.chart('states-line', {
 
         title: {
-            text: (activeType > 0 ? 'Incidental' : 'Cumulative') + ' Deaths for ' + state_code,
+            text: 'Forecasts for ' + (activeType > 0 ? 'Incidental' : 'Cumulative') + ' Deaths for ' + state_code
+            + ' Ahead 9/7/20',
             style: {
                 fontSize: '12px'
-            },
+            }
         },
         
         yAxis: {
@@ -131,6 +152,12 @@ function chartLine(states_df, state_code) {
             }
         },
 
+        xAxis: {
+            title: {
+                text: "Week Number"
+            },
+            type: 'datetime',
+        },
 
         legend: {
             layout: 'vertical',
@@ -144,6 +171,7 @@ function chartLine(states_df, state_code) {
                     connectorAllowed: false
                 },
                 pointStart:1,
+                color: lineColor,
             }
         },
     
@@ -172,12 +200,16 @@ function chartLine(states_df, state_code) {
 };
 
 // Charts the Detailed Historical Chart
-function chartLineDetailed(states_true_df, state_code) {
-    state_true = [{"name": state_code, "data": states_true_df[state_code] }]
+function chartLineHistorical(statesTrue, statesFuture, quantiles, q,  state_code) {
+
+    // This gets the last known date and adds it to the future guesses as to connect the line
+    futureStateWithPrevious = statesFuture[state_code]
+    futureStateWithPrevious.unshift(statesTrue[state_code][statesTrue[state_code]["length"] - 1]) 
+
     Highcharts.chart('graph', {
 
         title: {
-            text: 'Weekly ' + (activeType > 0 ? 'Incidental' : 'Cumulative') + ' Death Forecasts For ' + state_code
+            text: 'Historical Weekly ' + (activeType > 0 ? 'Incidental' : 'Cumulative') + ' Deaths For ' + state_code
         },
     
         yAxis: {
@@ -187,14 +219,12 @@ function chartLineDetailed(states_true_df, state_code) {
         },
 
         xAxis: {
-            type: "datetime",
-            labels: {
-              formatter: function() {
-                return Highcharts.dateFormat('%Y/%b/%e', this.key);
-              }
-            },
             title: {
                 text: 'Date'
+            },
+            type: 'datetime',
+            dateTimeLabelFormats: {
+                day: '%b %e'
             }
         },
 
@@ -206,14 +236,34 @@ function chartLineDetailed(states_true_df, state_code) {
     
         plotOptions: {
             series: {
-                label: {
-                    connectorAllowed: false
-                },
-
+                color: lineColor,
             }
         },
     
-        series: state_true,
+        series: [
+            {
+                name: "Forecasted Data",
+                data: futureStateWithPrevious,
+                color: '#006A96', 
+            },
+            {
+                name: "Quantiles",
+                data: quantiles[q][state_code],
+                type: 'arearange',
+                lineWidth: 0,
+                linkedTo: ':previous',
+                color: Highcharts.getOptions().colors[0],
+                fillOpacity: 0.3,
+                zIndex: 0,
+                marker: {
+                    enabled: false
+                }
+            },
+            {
+                name: "Historical Data",
+                data: statesTrue[state_code] 
+            }],
+
         credits: {
             enabled: false
         },
@@ -276,6 +326,14 @@ function updateUSMapWeekDisplay(week) {
     }
 };
 
+function updateQuantile(quant) {
+    if (typeof(quant) != "string") {
+        throw new Error('Pass number as a string type and not a number type');
+    }
+    q = quant;
+    updateGraphs(activeType);
+}
+
 // Updates all of the graphs (used when either type or location is changed)
 function updateGraphs(level) {
     // Sets the activeType (1 is Incidental, 0 is Cumulative)
@@ -283,40 +341,72 @@ function updateGraphs(level) {
     updateUSMapWeekDisplay(activeWeek);
 
     if (activeType == 1) {
-        stateType = states_inc;
-        stateTruthType = states_truth_inc;
+        statesFutureType = statesFutureInc;
+        statesTruthType = statesTruthInc;
+        quantileType = quantilesInc;
     } else {
-        stateType = states_cum;
-        stateTruthType = states_truth_cum;
+        statesFutureType = statesFutureCum;
+        statesTruthType = statesTruthCum;
+        quantileType = quantilesCum;
     }
 
-    chartLine(stateType, selectedState)
-    chartLineDetailed(stateTruthType, selectedState);
+    chartForecastLine(statesFutureType, selectedState);
+    chartLineHistorical(statesTruthType, statesFutureType, quantileType, q, selectedState);
 };
 
 // Promise functions read from the JSON object in loadJSON and then add them to arrays,
 // Before finally generating the lines
-dfPromiseInc.then(function (df) {
+
+dfStatesFutureInc.then(function (df) {
+    statesFutureInc = df
+    chartForecastLine(statesFutureInc, selectedState)
+
+    dfQuantilesInc.then(function (df) {
+        quantilesInc = df
+
+        dfPromiseIncTruth.then(function (df) {
+            statesTruthInc = df
+            chartLineHistorical(statesTruthInc, statesFutureInc, quantilesInc, q,  selectedState);
+            
+        });
+
+    });
+
+    dfQuantilesCum.then(function (df) {
+        quantilesCum = df
+    });
+
+
+
+    dfPromiseCumTruth.then(function (df) {
+        statesTruthCum = df
+        
+    });
+
+});
+
+dfStatesFutureCum.then(function (df) {
+    statesFutureCum = df
+});
+
+dfPromiseIncMap.then(function (df) {
     // Incidentals
     for (const state of df) {
         week1_inc.push({"code": "us-" + state["code"].toLowerCase(),"value": state["week1"]});
         week2_inc.push({"code": "us-" + state["code"].toLowerCase(),"value": state["week2"]});
         week3_inc.push({"code": "us-" + state["code"].toLowerCase(),"value": state["week3"]});
         week4_inc.push({"code": "us-" + state["code"].toLowerCase(),"value": state["week4"]});
-        states_inc[state["code"]] = [state["week1"], state["week2"], state["week3"], state["week4"]]
     };
     updateUSMapWeekDisplay(1); // Draws the map
-    chartLine(states_inc, selectedState)
 });
 
-dfPromiseCum.then(function (df) {
+dfPromiseCumMap.then(function (df) {
     // Cumulative
     for (const state of df) {
         week1_cum.push({"code": "us-" + state["code"].toLowerCase(),"value": state["week1"]});
         week2_cum.push({"code": "us-" + state["code"].toLowerCase(),"value": state["week2"]});
         week3_cum.push({"code": "us-" + state["code"].toLowerCase(),"value": state["week3"]});
         week4_cum.push({"code": "us-" + state["code"].toLowerCase(),"value": state["week4"]});
-        states_cum[state["code"]] = [state["week1"], state["week2"], state["week3"], state["week4"]]
     };
 });
 

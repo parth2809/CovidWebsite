@@ -1,6 +1,7 @@
 var activeType = 1 //1 is Incidental, 0 is Cumulative
 var activeWeek = 1 // Which week to display first (1-4)
 var selectedState = "CA" // Which state to display default information for
+var q = "0.95"
 
 var lineColor = "#182B49"
 
@@ -13,20 +14,24 @@ var dfPromiseCumTruth = loadJSON('datasets/df_truth_cum.json') // Contains cumul
 var dfStatesFutureInc = loadJSON('datasets/df_weekly_inc.json');
 var dfStatesFutureCum = loadJSON('datasets/df_weekly_cum.json');
 
+var dfQuantilesInc = loadJSON('datasets/df_quant_inc.json');
+var dfQuantilesCum = loadJSON('datasets/df_quant_cum.json');
 
 var week1_inc = [];
 var week2_inc = [];
 var week3_inc = [];
 var week4_inc = [];
-var states_truth_inc = {};
+var statesTruthInc = {};
 var statesFutureInc;
+var quantilesInc;
 
 var week1_cum = [];
 var week2_cum = [];
 var week3_cum = [];
 var week4_cum = [];
-var states_truth_cum = {};
+var statesTruthCum = {};
 var statesFutureCum;
+var quantilesCum;
 
 var weekArray = [];
 
@@ -77,13 +82,13 @@ function chartMap(data, week) {
 
         colorAxis: {
             min: 1,
-            type: 'logarithmic',
-            minColor: '#EEEEEE',
-            maxColor: '#222222',
+            type: 'linear',
+            minColor: '#d0d4da',
+            maxColor: '#101e33',
             stops: [
-                [0, '#EEEEEE'],
-                [0.67, '#444444'],
-                [1, '#222222']
+                [0, '#d0d4da'],
+                [0.67, '#182b49'],
+                [1, '#101e33']
             ],
         },
 
@@ -91,17 +96,14 @@ function chartMap(data, week) {
             data: data,
             point: {
                 events: {
-                    mouseOver: function () {
-                        //selectedState = this.code.slice(3).toUpperCase()
-                        //chartLine((activeType > 0 ? statesFutureInc : statesFutureCum), selectedState);
-                        //chartLineDetailed((activeType > 0 ? states_truth_inc : states_truth_cum), selectedState);
-                    },
                     click: function () {
                         selectedState = this.code.slice(3).toUpperCase()
                         chartForecastLine((activeType > 0 ? statesFutureInc : statesFutureCum), selectedState);
                         chartLineHistorical(
-                            (activeType > 0 ? states_truth_inc : states_truth_cum),
+                            (activeType > 0 ? statesTruthInc : statesTruthCum),
                             (activeType > 0 ? statesFutureInc : statesFutureCum),
+                            (activeType > 0 ? quantilesInc : quantilesCum),
+                            q,
                             selectedState);
                     },
                 },
@@ -193,8 +195,12 @@ function chartForecastLine(states_df, state_code) {
 };
 
 // Charts the Detailed Historical Chart
-function chartLineHistorical(statesTrue, statesFuture, state_code) {
-    console.log(statesFuture )
+function chartLineHistorical(statesTrue, statesFuture, quantiles, q,  state_code) {
+
+    // This gets the last known date and adds it to the future guesses as to connect the line
+    futureStateWithPrevious = statesFuture[state_code]
+    futureStateWithPrevious.unshift(statesTrue[state_code][statesTrue[state_code]["length"] - 1]) 
+
     Highcharts.chart('graph', {
 
         title: {
@@ -231,14 +237,27 @@ function chartLineHistorical(statesTrue, statesFuture, state_code) {
     
         series: [
             {
-                name: "Historical Data",
-                data: statesTrue[state_code] 
+                name: "Forecasted Data",
+                data: futureStateWithPrevious,
+                color: '#006A96', 
             },
             {
-                name: "Forecasted Data",
-                data: statesFuture[state_code],
-                color: '#006A96', 
-        }],
+                name: "Quantiles",
+                data: quantiles[q][state_code],
+                type: 'arearange',
+                lineWidth: 0,
+                linkedTo: ':previous',
+                color: Highcharts.getOptions().colors[0],
+                fillOpacity: 0.3,
+                zIndex: 0,
+                marker: {
+                    enabled: false
+                }
+            },
+            {
+                name: "Historical Data",
+                data: statesTrue[state_code] 
+            }],
 
         credits: {
             enabled: false
@@ -302,6 +321,14 @@ function updateUSMapWeekDisplay(week) {
     }
 };
 
+function updateQuantile(quant) {
+    if (typeof(quant) != "string") {
+        throw new Error('Pass value as string and not int');
+    }
+    q = quant;
+    updateGraphs(activeType);
+}
+
 // Updates all of the graphs (used when either type or location is changed)
 function updateGraphs(level) {
     // Sets the activeType (1 is Incidental, 0 is Cumulative)
@@ -310,14 +337,16 @@ function updateGraphs(level) {
 
     if (activeType == 1) {
         statesFutureType = statesFutureInc;
-        statesTruthType = states_truth_inc;
+        statesTruthType = statesTruthInc;
+        quantileType = quantilesInc;
     } else {
         statesFutureType = statesFutureCum;
-        statesTruthType = states_truth_cum;
+        statesTruthType = statesTruthCum;
+        quantileType = quantilesCum;
     }
 
     chartForecastLine(statesFutureType, selectedState);
-    chartLineHistorical(statesTruthType, statesFutureType, selectedState);
+    chartLineHistorical(statesTruthType, statesFutureType, quantileType, q, selectedState);
 };
 
 // Promise functions read from the JSON object in loadJSON and then add them to arrays,
@@ -327,14 +356,25 @@ dfStatesFutureInc.then(function (df) {
     statesFutureInc = df
     chartForecastLine(statesFutureInc, selectedState)
 
-    dfPromiseIncTruth.then(function (df) {
-        states_truth_inc = df
-        chartLineHistorical(states_truth_inc, statesFutureInc ,selectedState);
-        
+    dfQuantilesInc.then(function (df) {
+        quantilesInc = df
+
+        dfPromiseIncTruth.then(function (df) {
+            statesTruthInc = df
+            chartLineHistorical(statesTruthInc, statesFutureInc, quantilesInc, q,  selectedState);
+            
+        });
+
     });
 
+    dfQuantilesCum.then(function (df) {
+        quantilesCum = df
+    });
+
+
+
     dfPromiseCumTruth.then(function (df) {
-        states_truth_cum = df
+        statesTruthCum = df
         
     });
 

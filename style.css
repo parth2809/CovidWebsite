@@ -2,7 +2,14 @@
     margin-top: 1rem;
     text-align: center;
 }
-
+.btn {
+    background: #182B49 !important;
+    border-color: #747678 !important;
+}
+.active{
+    background: white !important;
+    color: black !important;
+}
 .slider {
     -webkit-appearance: none;
     width: 50%;

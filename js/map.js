@@ -35,6 +35,11 @@ var quantilesCum;
 
 var weekArray = [];
 
+Highcharts.setOptions({
+    lang: {
+      thousandsSep: ','
+    }
+  });
 
 // Loads JSON objects into promise objects
 async function loadJSON(path) {
@@ -54,7 +59,7 @@ function chartMap(data, week) {
         },
 
         title: {
-            text: 'Point Estimates for ' + (activeType > 0 ? 'Incidental' : 'Cumulative') + ' Deaths ' + 
+            text: 'Forecasts for ' + (activeType > 0 ? 'New Weekly' : 'Total') + ' Deaths ' + 
             week + (week > 1 ? ' Weeks' : ' Week')
             + ' Ahead 9/7/20',
         },
@@ -96,11 +101,6 @@ function chartMap(data, week) {
             data: data,
             point: {
                 events: {
-                    mouseOver: function () {
-                        //selectedState = this.code.slice(3).toUpperCase()
-                        //chartLine((activeType > 0 ? states_inc : states_cum), selectedState);
-                        //chartLineDetailed((activeType > 0 ? states_truth_inc : states_truth_cum), selectedState);
-                    },
                     click: function () {
                         selectedState = this.code.slice(3).toUpperCase()
                         chartForecastLine((activeType > 0 ? statesFutureInc : statesFutureCum), selectedState);
@@ -139,16 +139,16 @@ function chartForecastLine(states_df, state_code) {
     Highcharts.chart('states-line', {
 
         title: {
-            text: 'Forecasts for ' + (activeType > 0 ? 'Incidental' : 'Cumulative') + ' Deaths for ' + state_code
+            text: 'Forecasts for ' + (activeType > 0 ? 'New Weekly' : 'Total') + ' Deaths for ' + state_code
             + ' Ahead 9/7/20',
             style: {
                 fontSize: '12px'
             }
         },
-        
+    
         yAxis: {
             title: {
-                text: (activeType > 0 ? 'Incidental' : 'Cumulative') + ' Deaths'
+                text: (activeType > 0 ? 'New Weekly' : 'Total') + ' Deaths'
             }
         },
 
@@ -204,12 +204,12 @@ function chartLineHistorical(statesTrue, statesFuture, quantiles, q,  state_code
 
     // This gets the last known date and adds it to the future guesses as to connect the line
     futureStateWithPrevious = statesFuture[state_code]
-    futureStateWithPrevious.unshift(statesTrue[state_code][statesTrue[state_code]["length"] - 1]) 
+    futureStateWithPrevious.unshift(statesTrue[state_code][statesTrue[state_code]["length"] - 1])
 
     Highcharts.chart('graph', {
 
         title: {
-            text: 'Historical Weekly ' + (activeType > 0 ? 'Incidental' : 'Cumulative') + ' Deaths For ' + state_code
+            text: 'Reported ' + (activeType > 0 ? 'New Weekly' : 'Total') + ' Deaths by Week For ' + state_code
         },
     
         yAxis: {
@@ -233,18 +233,51 @@ function chartLineHistorical(statesTrue, statesFuture, quantiles, q,  state_code
             align: 'right',
             verticalAlign: 'middle'
         },
-    
-        plotOptions: {
-            series: {
-                color: lineColor,
-            }
-        },
+
+        tooltip: {
+            crosshairs: false,
+            shared: true,
+            useHTML: true,
+            formatter() {
+                if (this.x == futureStateWithPrevious[0][0]) { // Gets the pseudoguess point from the historical data
+                    var output = `<span style=font-size:10px>${ Highcharts.dateFormat('%A, %b %e', new Date(this.x))}</span><br/>`
+          
+                    // If the point is historical, show, otherwise, hide
+                    this.points.forEach(point => {
+                      if (point.color == lineColor) {
+                        return false
+                      } else {
+                        output += `<span style=color:${point.color}>●</span> ${point.series.name}: <b>${point.y}</b><br/>`
+                      }
+                    })
+                    return output
+                } else {
+                  var output = `<span style=font-size:10px>${ Highcharts.dateFormat('%A, %b %e', new Date(this.x))}</span><br/>`
+          
+                  this.points.forEach(point => {
+                    if (point.color == "#C69214") {
+                      output += `<span style=color:${point.color}>●</span> ${point.series.name}: <b>${point.point.low}</b> - <b>${point.point.high}</b><br/>`
+                    } else {
+                      output += `<span style=color:${point.color}>●</span> ${point.series.name}: <b>${point.y}</b><br/>`
+                    }
+                  })
+                  return output
+                }
+              }
+          },
     
         series: [
             {
                 name: "Forecasted Data",
                 data: futureStateWithPrevious,
                 color: '#006A96', 
+                zIndex: 1,
+                marker: {
+                    fillColor: 'white',
+                    lineWidth: 2,
+                    enabledThreshold: 0,
+                    lineColor: Highcharts.getOptions().colors[0]
+                }
             },
             {
                 name: "Quantiles",
@@ -252,7 +285,7 @@ function chartLineHistorical(statesTrue, statesFuture, quantiles, q,  state_code
                 type: 'arearange',
                 lineWidth: 0,
                 linkedTo: ':previous',
-                color: Highcharts.getOptions().colors[0],
+                color: '#C69214',
                 fillOpacity: 0.3,
                 zIndex: 0,
                 marker: {
@@ -260,8 +293,10 @@ function chartLineHistorical(statesTrue, statesFuture, quantiles, q,  state_code
                 }
             },
             {
-                name: "Historical Data",
-                data: statesTrue[state_code] 
+                name: "Reported Data",
+                data: statesTrue[state_code],
+                zIndex: 2,
+                color: lineColor
             }],
 
         credits: {
@@ -410,49 +445,3 @@ dfPromiseCumMap.then(function (df) {
     };
 });
 
-dfPromiseIncTruth.then(function (df) {
-    for (let key in df[0]){
-        if(key=="code"){
-            continue;
-        }else{
-            weekArray.push([]);
-        }
-    }
-    for (const state_true of df) {
-        for(let key in state_true){
-            if(key=="code"){
-                states_truth_inc[state_true["code"]]=[]
-                continue;
-            }
-            else{
-                states_truth_inc[state_true["code"]].push([key,state_true[key]])
-            }
-        }
-    };
-    chartLineDetailed(states_truth_inc, selectedState);
-    
-});
-
-dfPromiseCumTruth.then(function (df) {
-    console.log(df)
-    for (let key in df[0]){
-        if(key=="code"){
-            continue;
-        }else{
-            weekArray.push([]);
-        }
-    }
-    // Cumulative
-    for (const state_true of df) {
-        for(let key in state_true){
-            if(key=="code"){
-                states_truth_cum[state_true["code"]]=[]
-                continue;
-            }
-            else{
-                states_truth_cum[state_true["code"]].push([key,state_true[key]])
-            }
-        }
-    };
-    
-});

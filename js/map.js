@@ -323,7 +323,7 @@ function updateUSMapWeekDisplay(week) {
 
 function updateQuantile(quant) {
     if (typeof(quant) != "string") {
-        throw new Error('Pass value as string and not int');
+        throw new Error('Pass number as a string type and not a number type');
     }
     q = quant;
     updateGraphs(activeType);
@@ -404,8 +404,4 @@ dfPromiseCumMap.then(function (df) {
         week4_cum.push({"code": "us-" + state["code"].toLowerCase(),"value": state["week4"]});
     };
 });
-
-
-
-
 

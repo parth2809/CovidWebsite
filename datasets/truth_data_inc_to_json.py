@@ -18,7 +18,7 @@ locations = locations[(locations['location'] < 57) & (locations['location'] > 0)
 del locations['location_name']
 
 df_master = pd.merge(df, locations, on='location')
-df_master['date'] = df_master['date'].astype(np.int64)
+df_master['date'] = df_master['date'].astype(np.int64) / 1000000
 df_export = df_master[['abbreviation','date', 'value']]
 
 

@@ -185,11 +185,6 @@ function chartForecastLine(states_df, state_code) {
 
 // Charts the Detailed Historical Chart
 function chartLineDetailed(states_true_df, state_code) {
-    state_true = [{
-        "name": state_code, 
-        "data": states_true_df[state_code] 
-    }]
-    console.log(states_true_df)
     Highcharts.chart('graph', {
 
         title: {
@@ -203,14 +198,12 @@ function chartLineDetailed(states_true_df, state_code) {
         },
 
         xAxis: {
-            type: "datetime",
-            labels: {
-              formatter: function() {
-                return Highcharts.dateFormat('%Y/%b/%e', this.key);
-              }
-            },
             title: {
                 text: 'Date'
+            },
+            type: 'datetime',
+            dateTimeLabelFormats: {
+                day: '%b %e'
             }
         },
 
@@ -222,14 +215,15 @@ function chartLineDetailed(states_true_df, state_code) {
     
         plotOptions: {
             series: {
-                label: {
-                    connectorAllowed: false
-                },
                 color: lineColor,
             }
         },
     
-        series: state_true,
+        series: [{
+            "name": state_code, 
+            "data": states_true_df[state_code] 
+        }],
+
         credits: {
             enabled: false
         },

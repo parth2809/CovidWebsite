@@ -4,26 +4,31 @@ var selectedState = "CA" // Which state to display default information for
 
 var lineColor = "#182B49"
 
-var dfPromiseInc = loadJSON('datasets/df_inc.json') // Contains the incremental predictions
-var dfPromiseCum = loadJSON('datasets/df_cum.json') // Contains the cumulative predictions
+var dfPromiseIncMap = loadJSON('datasets/df_inc.json') // Contains the incremental predictions
+var dfPromiseCumMap = loadJSON('datasets/df_cum.json') // Contains the cumulative predictions
+
 var dfPromiseIncTruth = loadJSON('datasets/df_truth_inc.json') // Contains incremental historical data
 var dfPromiseCumTruth = loadJSON('datasets/df_truth_cum.json') // Contains cumulative historical data
+
+var dfStatesFutureInc = loadJSON('datasets/df_weekly_inc.json');
+var dfStatesFutureCum = loadJSON('datasets/df_weekly_cum.json');
+
 
 var week1_inc = [];
 var week2_inc = [];
 var week3_inc = [];
 var week4_inc = [];
 var states_truth_inc = {};
+var statesFutureInc;
 
 var week1_cum = [];
 var week2_cum = [];
 var week3_cum = [];
 var week4_cum = [];
 var states_truth_cum = {};
+var statesFutureCum;
 
 var weekArray = [];
-var states_inc = {};
-var states_cum = {};
 
 
 // Loads JSON objects into promise objects
@@ -88,13 +93,16 @@ function chartMap(data, week) {
                 events: {
                     mouseOver: function () {
                         //selectedState = this.code.slice(3).toUpperCase()
-                        //chartLine((activeType > 0 ? states_inc : states_cum), selectedState);
+                        //chartLine((activeType > 0 ? statesFutureInc : statesFutureCum), selectedState);
                         //chartLineDetailed((activeType > 0 ? states_truth_inc : states_truth_cum), selectedState);
                     },
                     click: function () {
                         selectedState = this.code.slice(3).toUpperCase()
-                        chartForecastLine((activeType > 0 ? states_inc : states_cum), selectedState);
-                        chartLineDetailed((activeType > 0 ? states_truth_inc : states_truth_cum), selectedState);
+                        chartForecastLine((activeType > 0 ? statesFutureInc : statesFutureCum), selectedState);
+                        chartLineHistorical(
+                            (activeType > 0 ? states_truth_inc : states_truth_cum),
+                            (activeType > 0 ? statesFutureInc : statesFutureCum),
+                            selectedState);
                     },
                 },
             },
@@ -140,7 +148,8 @@ function chartForecastLine(states_df, state_code) {
         xAxis: {
             title: {
                 text: "Week Number"
-            }
+            },
+            type: 'datetime',
         },
 
         legend: {
@@ -184,7 +193,8 @@ function chartForecastLine(states_df, state_code) {
 };
 
 // Charts the Detailed Historical Chart
-function chartLineDetailed(states_true_df, state_code) {
+function chartLineHistorical(statesTrue, statesFuture, state_code) {
+    console.log(statesFuture )
     Highcharts.chart('graph', {
 
         title: {
@@ -219,9 +229,15 @@ function chartLineDetailed(states_true_df, state_code) {
             }
         },
     
-        series: [{
-            "name": state_code, 
-            "data": states_true_df[state_code] 
+        series: [
+            {
+                name: "Historical Data",
+                data: statesTrue[state_code] 
+            },
+            {
+                name: "Forecasted Data",
+                data: statesFuture[state_code],
+                color: '#006A96', 
         }],
 
         credits: {
@@ -293,49 +309,63 @@ function updateGraphs(level) {
     updateUSMapWeekDisplay(activeWeek);
 
     if (activeType == 1) {
-        stateType = states_inc;
-        stateTruthType = states_truth_inc;
+        statesFutureType = statesFutureInc;
+        statesTruthType = states_truth_inc;
     } else {
-        stateType = states_cum;
-        stateTruthType = states_truth_cum;
+        statesFutureType = statesFutureCum;
+        statesTruthType = states_truth_cum;
     }
 
-    chartForecastLine(stateType, selectedState)
-    chartLineDetailed(stateTruthType, selectedState);
+    chartForecastLine(statesFutureType, selectedState);
+    chartLineHistorical(statesTruthType, statesFutureType, selectedState);
 };
 
 // Promise functions read from the JSON object in loadJSON and then add them to arrays,
 // Before finally generating the lines
-dfPromiseInc.then(function (df) {
+
+dfStatesFutureInc.then(function (df) {
+    statesFutureInc = df
+    chartForecastLine(statesFutureInc, selectedState)
+
+    dfPromiseIncTruth.then(function (df) {
+        states_truth_inc = df
+        chartLineHistorical(states_truth_inc, statesFutureInc ,selectedState);
+        
+    });
+
+    dfPromiseCumTruth.then(function (df) {
+        states_truth_cum = df
+        
+    });
+
+});
+
+dfStatesFutureCum.then(function (df) {
+    statesFutureCum = df
+});
+
+dfPromiseIncMap.then(function (df) {
     // Incidentals
     for (const state of df) {
         week1_inc.push({"code": "us-" + state["code"].toLowerCase(),"value": state["week1"]});
         week2_inc.push({"code": "us-" + state["code"].toLowerCase(),"value": state["week2"]});
         week3_inc.push({"code": "us-" + state["code"].toLowerCase(),"value": state["week3"]});
         week4_inc.push({"code": "us-" + state["code"].toLowerCase(),"value": state["week4"]});
-        states_inc[state["code"]] = [state["week1"], state["week2"], state["week3"], state["week4"]]
     };
     updateUSMapWeekDisplay(1); // Draws the map
-    chartForecastLine(states_inc, selectedState)
 });
 
-dfPromiseCum.then(function (df) {
+dfPromiseCumMap.then(function (df) {
     // Cumulative
     for (const state of df) {
         week1_cum.push({"code": "us-" + state["code"].toLowerCase(),"value": state["week1"]});
         week2_cum.push({"code": "us-" + state["code"].toLowerCase(),"value": state["week2"]});
         week3_cum.push({"code": "us-" + state["code"].toLowerCase(),"value": state["week3"]});
         week4_cum.push({"code": "us-" + state["code"].toLowerCase(),"value": state["week4"]});
-        states_cum[state["code"]] = [state["week1"], state["week2"], state["week3"], state["week4"]]
     };
 });
 
-dfPromiseIncTruth.then(function (df) {
-    states_truth_inc = df
-    chartLineDetailed(states_truth_inc, selectedState);
-    
-});
 
-dfPromiseCumTruth.then(function (df) {
-    states_truth_cum = df
-});
+
+
+

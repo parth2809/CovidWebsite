@@ -2,6 +2,7 @@ var activeType = 1 //1 is Incidental, 0 is Cumulative
 var activeWeek = 1 // Which week to display first (1-4)
 var selectedState = "CA" // Which state to display default information for
 var q = "0.95"
+var dateOfForecast = "9/28/20"
 
 var lineColor = "#006A96"
 var forecastColor = "#00C6D7"
@@ -63,7 +64,7 @@ function chartMap(data, week) {
         title: {
             text: 'Forecasts for ' + (activeType > 0 ? 'New Weekly' : 'Total') + ' Deaths ' + 
             week + (week > 1 ? ' Weeks' : ' Week')
-            + ' Ahead 9/7/20',
+            + ' Ahead ' + dateOfForecast,
         },
 
         exporting: {
@@ -142,7 +143,7 @@ function chartForecastLine(states_df, state_code) {
 
         title: {
             text: 'Forecasts for ' + (activeType > 0 ? 'New Weekly' : 'Total') + ' Deaths for ' + state_code
-            + ' Ahead 9/7/20',
+            + ' Ahead ' + dateOfForecast,
             style: {
                 fontSize: '12px'
             }

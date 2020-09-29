@@ -102,7 +102,7 @@
         
         <h5 style="align-content: center; text-align: center;">Select Quantile range from the slider below</h5>
         <div style="align-content: center; text-align: center;" class="slidecontainer">
-            <input type="range" min="0.50" max="0.95" value="0.95" step="0.05" class="slider" id="myRange">
+            <input type="range" min="0.50" max="1.05" value="0.95" step="0.05" class="slider" id="myRange">
             <p>Value: <span id="valueDisplay"></span></p>
         </div>
 
@@ -159,28 +159,34 @@
         <div class="container">
             <div class="d-flex flex-column flex-wrap flex-fill">
                 <span class="navbar-text mx-auto py-0">IN COLLABORATION WITH</span>
-                <br />
+                <br>
                 <ul class="navbar-nav mb-auto mt-0 mx-auto">
                     <li class="nav-item">
                         <a class="nav-link py-0" href="https://datascience.ucsd.edu/" target="_blank"><img class="logo-collab" src="logos/UCSanDiego_Halicioglu_White.png" alt="HDSI Logo in White"></a>
                     </li>
                     <li class="nav-item">
+                        <a class="nav-link py-0" href="https://www.networkscienceinstitute.org" target="_blank"><img style="height: 90px;" class="logo-collab" src="logos/northwest_gleam.png" alt="JSOE Logo in White"></a>
+                    </li>
+                    <li class="nav-item">
                         <a class="nav-link py-0" href="https://jacobsschool.ucsd.edu/" target="_blank"><img class="logo-collab" src="logos/UCSDLogo_JSOE_White.png" alt="JSOE Logo in White"></a>
                     </li>
                 </ul>
-                <br />
+                <br>
                 <ul class="navbar-nav mb-auto mt-0 mx-auto">
                     <li class="nav-item">
-                        <a class="nav-link py-0 bottom-link" href="https://covid19.gleamproject.org/" target="_blank">GLEAM PROJECT</a>
+                        <a class="nav-link py-0 bottom-link" href="https://covid19.gleamproject.org/" target="_blank">DeepGLEAM Project</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link py-0" href="https://datascience.ucsd.edu/about/contact"  target="_blank">CONTACT US</a>
+                        <a class="nav-link py-0" href="https://www.cdc.gov/coronavirus/2019-ncov/covid-data/forecasting-us-previous.html" target="_blank">CDC</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link py-0" href="https://datascience.ucsd.edu/" target="_blank">UCSD-NEU Team</a>
                     </li>
                 </ul>
-                <br />
+                <br>
                 <ul class="navbar-nav mb-auto mt-0 mx-auto">
                     <li class="nav-item">
-                        <p class=" py-0" style="color: rgba(255,255,255,.5)">&#169;<small> 2020 REGENTS OF THE UNIVERSITY OF CALIFORNIA</small></p>
+                        <p class=" py-0" style="color: rgba(255,255,255,.5)">©<small> 2020 REGENTS OF THE UNIVERSITY OF CALIFORNIA</small></p>
                     </li>
                 </ul>
             </div>
@@ -191,13 +197,21 @@
     <!-- jQuery first, then Popper.js, then Bootstrap JS -->
     <script>
         var slider = document.getElementById("myRange");
-        var output = document.getElementById("valueDisplay");
-        output.innerHTML = slider.value; // Display the default slider value
+        var quantileDisplay = document.getElementById("valueDisplay");
+        quantileDisplay.innerHTML = slider.value; // Display the default slider value
 
         // Update the current slider value (each time you drag the slider handle)
         slider.oninput = function() {
-            output.innerHTML = this.value;
-            updateQuantile(this.value);
+            let val;
+            if (this.value == 1) {
+                val = "0.975";
+            } else if (this.value == 1.05) {
+                val = "0.99";
+            } else {
+                val = this.value
+            }
+            quantileDisplay.innerHTML = val;
+            updateQuantile(val);
         }
     </script>
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>

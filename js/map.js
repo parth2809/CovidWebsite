@@ -3,7 +3,9 @@ var activeWeek = 1 // Which week to display first (1-4)
 var selectedState = "CA" // Which state to display default information for
 var q = "0.95"
 
-var lineColor = "#182B49"
+var lineColor = "#006A96"
+var forecastColor = "#00C6D7"
+var quantileColor = "#C69214"
 
 var dfPromiseIncMap = loadJSON('datasets/df_inc.json') // Contains the incremental predictions
 var dfPromiseCumMap = loadJSON('datasets/df_cum.json') // Contains the cumulative predictions
@@ -89,11 +91,11 @@ function chartMap(data, week) {
             min: 1,
             type: 'linear',
             minColor: '#d0d4da',
-            maxColor: '#101e33',
+            maxColor: '#182B49',
             stops: [
                 [0, '#d0d4da'],
-                [0.67, '#182b49'],
-                [1, '#101e33']
+                [0.67, '#006A96'],
+                [1, '#182B49']
             ],
         },
 
@@ -270,7 +272,7 @@ function chartLineHistorical(statesTrue, statesFuture, quantiles, q,  state_code
             {
                 name: "Forecasted Data",
                 data: futureStateWithPrevious,
-                color: '#006A96', 
+                color: forecastColor, 
                 zIndex: 1,
                 marker: {
                     fillColor: 'white',
@@ -285,7 +287,7 @@ function chartLineHistorical(statesTrue, statesFuture, quantiles, q,  state_code
                 type: 'arearange',
                 lineWidth: 0,
                 linkedTo: ':previous',
-                color: '#C69214',
+                color: quantileColor,
                 fillOpacity: 0.3,
                 zIndex: 0,
                 marker: {

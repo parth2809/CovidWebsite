@@ -8,7 +8,7 @@ df = pd.read_csv('truth-Cumulative Deaths.csv',
 df = df[df['location']!='US']
 df['location'] = df['location'].astype(int)
 df['date'] = pd.to_datetime(df['date'])
-df = df[(df['date'] <= pd.Timestamp(2020, 9, 26)) & (df['date'] >= pd.Timestamp(2020, 1, 27))]
+df = df[(df['date'] <= pd.Timestamp(2020, 9, 26)) & (df['date'] >= pd.Timestamp(2020, 1, 25))]
 df = df[(df['location'] < 57) & (df['location'] > 0)& (df['location'] !=11)]
 
 locations = pd.read_csv("locations.csv")

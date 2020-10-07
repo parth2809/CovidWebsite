@@ -2,7 +2,7 @@ var activeType = 1 //1 is Incidental, 0 is Cumulative
 var activeWeek = 1 // Which week to display first (1-4)
 var selectedState = "CA" // Which state to display default information for
 var q = "0.95"
-var dateOfForecast = "9/28/20"
+var dateOfForecast = "10/3/20"
 
 var lineColor = "#006A96"
 var forecastColor = "#00C6D7"

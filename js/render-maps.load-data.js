@@ -1,4 +1,4 @@
-var activeType = 1 //1 is Incidental, 0 is Cumulative
+var activeType = 0 //1 is Cumidental, 0 is Inculative
 var activeWeek = 1 // Which week to display first (1-4)
 var selectedState = "CA" // Which state to display default information for
 var q = "0.95"
@@ -8,25 +8,17 @@ var lineColor = "#006A96"
 var forecastColor = "#00C6D7"
 var quantileColor = "#FFCD00" // C69214
 
-var dfPromiseIncMap = loadJSON('datasets/df_inc.json') // Contains the incremental predictions
-var dfPromiseCumMap = loadJSON('datasets/df_cum.json') // Contains the cumulative predictions
+var dfPromiseCumMap = loadJSON('datasets/df_cum.json') // Contains the cumremental predictions
+var dfPromiseIncMap = loadJSON('datasets/df_inc.json') // Contains the inculative predictions
 
-var dfPromiseIncTruth = loadJSON('datasets/df_truth_inc.json') // Contains incremental historical data
-var dfPromiseCumTruth = loadJSON('datasets/df_truth_cum.json') // Contains cumulative historical data
+var dfPromiseCumTruth = loadJSON('datasets/df_truth_cum.json') // Contains cumremental historical data
+var dfPromiseIncTruth = loadJSON('datasets/df_truth_inc.json') // Contains inculative historical data
 
-var dfStatesFutureInc = loadJSON('datasets/df_weekly_inc.json');
 var dfStatesFutureCum = loadJSON('datasets/df_weekly_cum.json');
+var dfStatesFutureInc = loadJSON('datasets/df_weekly_inc.json');
 
-var dfQuantilesInc = loadJSON('datasets/df_quant_inc.json');
 var dfQuantilesCum = loadJSON('datasets/df_quant_cum.json');
-
-var week1_inc = [];
-var week2_inc = [];
-var week3_inc = [];
-var week4_inc = [];
-var statesTruthInc = {};
-var statesFutureInc;
-var quantilesInc;
+var dfQuantilesInc = loadJSON('datasets/df_quant_inc.json');
 
 var week1_cum = [];
 var week2_cum = [];
@@ -35,6 +27,14 @@ var week4_cum = [];
 var statesTruthCum = {};
 var statesFutureCum;
 var quantilesCum;
+
+var week1_inc = [];
+var week2_inc = [];
+var week3_inc = [];
+var week4_inc = [];
+var statesTruthInc = {};
+var statesFutureInc;
+var quantilesInc;
 
 var weekArray = [];
 
@@ -54,54 +54,54 @@ async function loadJSON(path) {
 // Promise functions read from the JSON object in loadJSON and then add them to arrays,
 // Before finally generating the lines
 
-dfStatesFutureInc.then(function (df) {
-    statesFutureInc = df
+dfStatesFutureCum.then(function (df) {
+    statesFutureCum = df
 
-    dfQuantilesInc.then(function (df) {
-        quantilesInc = df
+    dfQuantilesCum.then(function (df) {
+        quantilesCum = df
 
-        dfPromiseIncTruth.then(function (df) {
-            statesTruthInc = df
-            chartLineHistorical(statesTruthInc, statesFutureInc, quantilesInc, q,  selectedState);
+        dfPromiseCumTruth.then(function (df) {
+            statesTruthCum = df
+            chartLineHistorical(statesTruthCum, statesFutureCum, quantilesCum, q,  selectedState);
             
         });
 
     });
 
-    dfQuantilesCum.then(function (df) {
-        quantilesCum = df
+    dfQuantilesInc.then(function (df) {
+        quantilesInc = df
     });
 
 
 
-    dfPromiseCumTruth.then(function (df) {
-        statesTruthCum = df
+    dfPromiseIncTruth.then(function (df) {
+        statesTruthInc = df
         
     });
 
 });
 
-dfStatesFutureCum.then(function (df) {
-    statesFutureCum = df
-});
-
-dfPromiseIncMap.then(function (df) {
-    // Incidentals
-    for (const state of df) {
-        week1_inc.push({"code": "us-" + state["code"].toLowerCase(),"value": state["week1"]});
-        week2_inc.push({"code": "us-" + state["code"].toLowerCase(),"value": state["week2"]});
-        week3_inc.push({"code": "us-" + state["code"].toLowerCase(),"value": state["week3"]});
-        week4_inc.push({"code": "us-" + state["code"].toLowerCase(),"value": state["week4"]});
-    };
-    updateUSMapWeekDisplay(1); // Draws the map
+dfStatesFutureInc.then(function (df) {
+    statesFutureInc = df
 });
 
 dfPromiseCumMap.then(function (df) {
-    // Cumulative
+    // Cumidentals
     for (const state of df) {
         week1_cum.push({"code": "us-" + state["code"].toLowerCase(),"value": state["week1"]});
         week2_cum.push({"code": "us-" + state["code"].toLowerCase(),"value": state["week2"]});
         week3_cum.push({"code": "us-" + state["code"].toLowerCase(),"value": state["week3"]});
         week4_cum.push({"code": "us-" + state["code"].toLowerCase(),"value": state["week4"]});
+    };
+    updateUSMapWeekDisplay(1); // Draws the map
+});
+
+dfPromiseIncMap.then(function (df) {
+    // Inculative
+    for (const state of df) {
+        week1_inc.push({"code": "us-" + state["code"].toLowerCase(),"value": state["week1"]});
+        week2_inc.push({"code": "us-" + state["code"].toLowerCase(),"value": state["week2"]});
+        week3_inc.push({"code": "us-" + state["code"].toLowerCase(),"value": state["week3"]});
+        week4_inc.push({"code": "us-" + state["code"].toLowerCase(),"value": state["week4"]});
     };
 });

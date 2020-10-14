@@ -3,12 +3,14 @@
     text-align: center;
 }
 .btn {
-    background: #182B49 !important;
-    border-color: #747678 !important;
-}
-.active{
     background: white !important;
     color: black !important;
+}
+.active{
+    background: #182B49 !important;
+    border-color: #747678 !important;
+    color: white !important;
+
 }
 .slider {
     -webkit-appearance: none;

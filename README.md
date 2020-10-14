@@ -35,4 +35,6 @@ Afterwards, if you wanted to look into the second page, that would be great. Alt
 
 ## Other Resources
 * https://github.com/reichlab/covid19-forecast-hub/tree/master/data-processed/UCSD_NEU-DeepGLEAM
+* https://github.com/reichlab/covid19-forecast-hub/blob/master/data-truth/truth-Cumulative%20Deaths.csv
+* https://github.com/reichlab/covid19-forecast-hub/blob/master/data-truth/truth-Incident%20Deaths.csv
 * Stephs XD screenshot

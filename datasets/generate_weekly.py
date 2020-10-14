@@ -2,7 +2,7 @@ import numpy as np
 import pandas as pd
 import json
 
-gleam_data = pd.read_csv("2020-10-05-UCSD_NEU-DeepGLEAM.csv")
+gleam_data = pd.read_csv("2020-10-12-UCSD_NEU-DeepGLEAM.csv")
 locations = pd.read_csv("locations.csv")
 df_master = pd.merge(gleam_data, locations, on='location')
 df_master = df_master[df_master["type"] == "point"]

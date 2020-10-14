@@ -5,7 +5,7 @@ import numpy as np
 Creates a clean JSON from the GLEAM data for use with the charting tool
 '''
 
-gleam_data = pd.read_csv("2020-10-05-UCSD_NEU-DeepGLEAM.csv") # Ideal if it can download straight from their github
+gleam_data = pd.read_csv("2020-10-12-UCSD_NEU-DeepGLEAM.csv") # Ideal if it can download straight from their github
 locations = pd.read_csv("locations.csv")
 df_master = pd.merge(gleam_data, locations, on='location')
 df_master = df_master[df_master["type"] == "point"]

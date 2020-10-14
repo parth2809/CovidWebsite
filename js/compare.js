@@ -1,3 +1,4 @@
+
 var activeType = 1 //1 is Incidental, 0 is Cumulative
 var activeWeek = 1 // Which week to display first (1-4)
 var selectedState = "CA" // Which state to display default information for
@@ -6,7 +7,7 @@ var dateOfForecast = "10/10/20"
 
 var lineColor = "#006A96"
 var forecastColor = "#00C6D7"
-var quantileColor = "#C69214"
+var quantileColor = "#FFCD00" // C69214
 
 var dfPromiseIncMap = loadJSON('datasets/df_inc.json') // Contains the incremental predictions
 var dfPromiseCumMap = loadJSON('datasets/df_cum.json') // Contains the cumulative predictions
@@ -67,6 +68,10 @@ function chartMap(data, week) {
             + ' Ahead ' + dateOfForecast,
         },
 
+        subtitle: {
+            text: 'Hover over a state to get the forecast, click on a state to get a detailed chart below'
+        },
+
         exporting: {
             sourceWidth: 600,
             sourceHeight: 500
@@ -106,7 +111,6 @@ function chartMap(data, week) {
                 events: {
                     click: function () {
                         selectedState = this.code.slice(3).toUpperCase()
-                        //chartForecastLine((activeType > 0 ? statesFutureInc : statesFutureCum), selectedState);
                         chartLineHistorical(
                             (activeType > 0 ? statesTruthInc : statesTruthCum),
                             (activeType > 0 ? statesFutureInc : statesFutureCum),
@@ -133,75 +137,6 @@ function chartMap(data, week) {
     });
 };
 
-// Charts the Weekly Forecast Chart
-function chartForecastLine(states_df, state_code) {
-    state = [{
-        "name": state_code, 
-        "data": states_df[state_code]
-    }];
-    Highcharts.chart('states-line', {
-
-        title: {
-            text: 'Forecasts for ' + (activeType > 0 ? 'New Weekly' : 'Total') + ' Deaths for ' + state_code
-            + ' Ahead ' + dateOfForecast,
-            style: {
-                fontSize: '12px'
-            }
-        },
-    
-        yAxis: {
-            title: {
-                text: (activeType > 0 ? 'New Weekly' : 'Total') + ' Deaths'
-            }
-        },
-
-        xAxis: {
-            title: {
-                text: "Week Number"
-            },
-            type: 'datetime',
-        },
-
-        legend: {
-            layout: 'vertical',
-            align: 'right',
-            verticalAlign: 'middle'
-        },
-    
-        plotOptions: {
-            series: {
-                label: {
-                    connectorAllowed: false
-                },
-                pointStart:1,
-                color: lineColor,
-            }
-        },
-    
-        series: state,
-        credits: {
-            enabled: false
-        },
-    
-    
-        responsive: {
-            rules: [{
-                condition: {
-                    maxWidth: 500
-                },
-                chartOptions: {
-                    legend: {
-                        layout: 'horizontal',
-                        align: 'center',
-                        verticalAlign: 'bottom'
-                    }
-                }
-            }]
-        }
-    
-    });
-};
-
 // Charts the Detailed Historical Chart
 function chartLineHistorical(statesTrue, statesFuture, quantiles, q,  state_code) {
 
@@ -211,8 +146,16 @@ function chartLineHistorical(statesTrue, statesFuture, quantiles, q,  state_code
 
     Highcharts.chart('graph', {
 
+        chart: {
+            zoomType: 'x'
+        },
+
         title: {
             text: 'Reported ' + (activeType > 0 ? 'New Weekly' : 'Total') + ' Deaths by Week For ' + state_code
+        },
+
+        subtitle: {
+            text: 'Click and drag cursor over a selected timeframe to zoom into the timeframe'
         },
     
         yAxis: {
@@ -388,7 +331,6 @@ function updateGraphs(level) {
         quantileType = quantilesCum;
     }
 
-    //chartForecastLine(statesFutureType, selectedState);
     chartLineHistorical(statesTruthType, statesFutureType, quantileType, q, selectedState);
 };
 
@@ -397,7 +339,6 @@ function updateGraphs(level) {
 
 dfStatesFutureInc.then(function (df) {
     statesFutureInc = df
-    //chartForecastLine(statesFutureInc, selectedState)
 
     dfQuantilesInc.then(function (df) {
         quantilesInc = df

@@ -61,6 +61,5 @@ function updateGraphs(level) {
         quantileType = quantilesCum;
     }
 
-    //chartForecastLine(statesFutureType, selectedState);
     chartLineHistorical(statesTruthType, statesFutureType, quantileType, q, selectedState);
 };

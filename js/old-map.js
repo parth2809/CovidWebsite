@@ -1,4 +1,57 @@
 
+var activeType = 1 //1 is Incidental, 0 is Cumulative
+var activeWeek = 1 // Which week to display first (1-4)
+var selectedState = "CA" // Which state to display default information for
+var q = "0.95"
+var dateOfForecast = "10/10/20"
+
+var lineColor = "#006A96"
+var forecastColor = "#00C6D7"
+var quantileColor = "#C69214"
+
+var dfPromiseIncMap = loadJSON('datasets/df_inc.json') // Contains the incremental predictions
+var dfPromiseCumMap = loadJSON('datasets/df_cum.json') // Contains the cumulative predictions
+
+var dfPromiseIncTruth = loadJSON('datasets/df_truth_inc.json') // Contains incremental historical data
+var dfPromiseCumTruth = loadJSON('datasets/df_truth_cum.json') // Contains cumulative historical data
+
+var dfStatesFutureInc = loadJSON('datasets/df_weekly_inc.json');
+var dfStatesFutureCum = loadJSON('datasets/df_weekly_cum.json');
+
+var dfQuantilesInc = loadJSON('datasets/df_quant_inc.json');
+var dfQuantilesCum = loadJSON('datasets/df_quant_cum.json');
+
+var week1_inc = [];
+var week2_inc = [];
+var week3_inc = [];
+var week4_inc = [];
+var statesTruthInc = {};
+var statesFutureInc;
+var quantilesInc;
+
+var week1_cum = [];
+var week2_cum = [];
+var week3_cum = [];
+var week4_cum = [];
+var statesTruthCum = {};
+var statesFutureCum;
+var quantilesCum;
+
+var weekArray = [];
+
+Highcharts.setOptions({
+    lang: {
+      thousandsSep: ','
+    }
+  });
+
+// Loads JSON objects into promise objects
+async function loadJSON(path) {
+	let response = await fetch(path);
+	let df = await response.json();
+	return df;
+};
+
 // Charts the USA Map
 function chartMap(data, week) {
     // Draws the map, using weekly data and the given week
@@ -140,7 +193,7 @@ function chartLineHistorical(statesTrue, statesFuture, quantiles, q,  state_code
                       if (point.color == lineColor) {
                         return false
                       } else {
-                        output += `<span style=color:${point.color}>●</span> ${point.series.name}: <b>${Math.round(point.y)}</b><br/>`
+                        output += `<span style=color:${point.color}>●</span> ${point.series.name}: <b>${point.y}</b><br/>`
                       }
                     })
                     return output
@@ -148,10 +201,10 @@ function chartLineHistorical(statesTrue, statesFuture, quantiles, q,  state_code
                   var output = `<span style=font-size:10px>${ Highcharts.dateFormat('%A, %b %e', new Date(this.x))}</span><br/>`
           
                   this.points.forEach(point => {
-                    if (point.color == quantileColor) {
-                      output += `<span style=color:${point.color}>●</span> ${point.series.name}: <b>${Math.round(point.point.low)}</b> - <b>${Math.round(point.point.high)}</b><br/>`
+                    if (point.color == "#C69214") {
+                      output += `<span style=color:${point.color}>●</span> ${point.series.name}: <b>${point.point.low}</b> - <b>${point.point.high}</b><br/>`
                     } else {
-                      output += `<span style=color:${point.color}>●</span> ${point.series.name}: <b>${Math.round(point.y)}</b><br/>`
+                      output += `<span style=color:${point.color}>●</span> ${point.series.name}: <b>${point.y}</b><br/>`
                     }
                   })
                   return output
@@ -215,4 +268,124 @@ function chartLineHistorical(statesTrue, statesFuture, quantiles, q,  state_code
     });
 };
 
+// Updates the US Map (used for updating week number, also called in updateGraphs)
+function updateUSMapWeekDisplay(week) {
+    // sets and updates the chart with the appropriate type and week number, and then draws the map
+    // activeType determines incidental or cumulative
+    // week determines week number
+    activeWeek = week
+    if (activeType == 0) {
+        switch (week) {
+            case 1:
+                chartMap(week1_cum, week);
+                break;
+            case 2:
+                chartMap(week2_cum, week);
+                break;
+            case 3:
+                chartMap(week3_cum, week);
+                break;
+            case 4:
+                chartMap(week4_cum, week);
+                break;
+        }
+    } else {
+        switch (week) {
+            case 1:
+                chartMap(week1_inc, week);
+                break;
+            case 2:
+                chartMap(week2_inc, week);
+                break;
+            case 3:
+                chartMap(week3_inc, week);
+                break;
+            case 4:
+                chartMap(week4_inc, week);
+                break;
+        }
+    }
+};
+
+function updateQuantile(quant) {
+    if (typeof(quant) != "string") {
+        throw new Error('Pass number as a string type and not a number type');
+    }
+    q = quant;
+    updateGraphs(activeType);
+}
+
+// Updates all of the graphs (used when either type or location is changed)
+function updateGraphs(level) {
+    // Sets the activeType (1 is Incidental, 0 is Cumulative)
+    activeType = level;
+    updateUSMapWeekDisplay(activeWeek);
+
+    if (activeType == 1) {
+        statesFutureType = statesFutureInc;
+        statesTruthType = statesTruthInc;
+        quantileType = quantilesInc;
+    } else {
+        statesFutureType = statesFutureCum;
+        statesTruthType = statesTruthCum;
+        quantileType = quantilesCum;
+    }
+
+    chartLineHistorical(statesTruthType, statesFutureType, quantileType, q, selectedState);
+};
+
+// Promise functions read from the JSON object in loadJSON and then add them to arrays,
+// Before finally generating the lines
+
+dfStatesFutureInc.then(function (df) {
+    statesFutureInc = df
+
+    dfQuantilesInc.then(function (df) {
+        quantilesInc = df
+
+        dfPromiseIncTruth.then(function (df) {
+            statesTruthInc = df
+            chartLineHistorical(statesTruthInc, statesFutureInc, quantilesInc, q,  selectedState);
+            
+        });
+
+    });
+
+    dfQuantilesCum.then(function (df) {
+        quantilesCum = df
+    });
+
+
+
+    dfPromiseCumTruth.then(function (df) {
+        statesTruthCum = df
+        
+    });
+
+});
+
+dfStatesFutureCum.then(function (df) {
+    statesFutureCum = df
+});
+
+dfPromiseIncMap.then(function (df) {
+    // Incidentals
+    for (const state of df) {
+        week1_inc.push({"code": "us-" + state["code"].toLowerCase(),"value": state["week1"]});
+        week2_inc.push({"code": "us-" + state["code"].toLowerCase(),"value": state["week2"]});
+        week3_inc.push({"code": "us-" + state["code"].toLowerCase(),"value": state["week3"]});
+        week4_inc.push({"code": "us-" + state["code"].toLowerCase(),"value": state["week4"]});
+    };
+    updateUSMapWeekDisplay(1); // Draws the map
+});
+
+dfPromiseCumMap.then(function (df) {
+    // Cumulative
+    for (const state of df) {
+        week1_cum.push({"code": "us-" + state["code"].toLowerCase(),"value": state["week1"]});
+        week2_cum.push({"code": "us-" + state["code"].toLowerCase(),"value": state["week2"]});
+        week3_cum.push({"code": "us-" + state["code"].toLowerCase(),"value": state["week3"]});
+        week4_cum.push({"code": "us-" + state["code"].toLowerCase(),"value": state["week4"]});
+    };
+});
 

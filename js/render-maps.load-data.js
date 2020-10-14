@@ -56,7 +56,6 @@ async function loadJSON(path) {
 
 dfStatesFutureInc.then(function (df) {
     statesFutureInc = df
-    //chartForecastLine(statesFutureInc, selectedState)
 
     dfQuantilesInc.then(function (df) {
         quantilesInc = df

@@ -106,7 +106,7 @@ function chartMap(data, week) {
                 events: {
                     click: function () {
                         selectedState = this.code.slice(3).toUpperCase()
-                        chartForecastLine((activeType > 0 ? statesFutureInc : statesFutureCum), selectedState);
+                        //chartForecastLine((activeType > 0 ? statesFutureInc : statesFutureCum), selectedState);
                         chartLineHistorical(
                             (activeType > 0 ? statesTruthInc : statesTruthCum),
                             (activeType > 0 ? statesFutureInc : statesFutureCum),
@@ -388,7 +388,7 @@ function updateGraphs(level) {
         quantileType = quantilesCum;
     }
 
-    chartForecastLine(statesFutureType, selectedState);
+    //chartForecastLine(statesFutureType, selectedState);
     chartLineHistorical(statesTruthType, statesFutureType, quantileType, q, selectedState);
 };
 
@@ -397,7 +397,7 @@ function updateGraphs(level) {
 
 dfStatesFutureInc.then(function (df) {
     statesFutureInc = df
-    chartForecastLine(statesFutureInc, selectedState)
+    //chartForecastLine(statesFutureInc, selectedState)
 
     dfQuantilesInc.then(function (df) {
         quantilesInc = df

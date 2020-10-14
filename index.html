@@ -32,8 +32,10 @@
     <div class="row no-gutters">
         <div class="col">
             <div style="background-color:#182B49" class="page-header">
-                <img style="width:auto;height:75px; padding: 10px 10px 10px 10px;" src="logos/UCSanDiego_Halicioglu_White.png" alt="HDSI Logo in White">
+                <img style="width:auto;height:85px; padding: 10px 10px 10px 10px;" src="logos/UCSanDiego_Halicioglu_White.png" alt="HDSI Logo in White">
+                <img style="width:auto;height:85px; float:right; padding: 10px 10px 10px 10px;" src="logos/DeepGleam-logo-white.png" alt="HDSI Logo in White">
             </div> 
+            
         </div>
     </div>
 
@@ -59,7 +61,9 @@
 
         <br />
         
+
         <div class="row no-gutters ">
+            <!-- Buttons-->
             <div class="col-xl-3 col-lg-12 text-center">
                 <div class="justify-content-center">
                     <h4>Deaths</h4>
@@ -92,17 +96,13 @@
                 <!-- US Map Chart lives here -->
                 <div id="map" style="align:center; width: 100%;"></div>
             </div>
-            <div style="visibility: hidden;"class="col-xl-3 col-lg-12 align-self-center">
-                <div id="states-line"  style="float: center; width: 80%;"></div>
-            </div>
         </div>
-        <br />
 
-        <hr>
+        <br /><hr>
         
         <h5 style="align-content: center; text-align: center;">Select Quantile range from the slider below</h5>
         <div style="align-content: center; text-align: center;" class="slidecontainer">
-            <input type="range" min="0.50" max="1.05" value="0.95" step="0.05" class="slider" id="myRange">
+            <input type="range" min="0.65" max="1.05" value="0.95" step="0.05" class="slider" id="myRange">
             <p>Value: <span id="valueDisplay"></span></p>
         </div>
 
@@ -161,14 +161,11 @@
                         <a class="nav-link py-0" href="http://mobs-lab.org/" target="_blank"><img class="logo-collab" src="logos/mobs-lab-logo-full_white.png" alt="Mobs Lab Logo"></a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link py-0" href="https://covid19.gleamproject.org/" target="_blank"><img class="logo-collab" src="logos/DeepGLEAM-logo-01.png" alt="JSOE Logo in White"></a>
+                        <a class="nav-link py-0" href="https://covid19.gleamproject.org/" target="_blank"><img class="logo-collab" src="logos/DeepGleam-logo-white.png" alt="JSOE Logo in White"></a>
                     </li>
                 </ul>
                 <br>
                 <ul class="navbar-nav mb-auto mt-0 mx-auto">
-                    <li class="nav-item">
-                        <a class="nav-link py-0 bottom-link" href="https://covid19.gleamproject.org/" target="_blank">DeepGLEAM Project</a>
-                    </li>
                     <li class="nav-item">
                         <a class="nav-link py-0" href="https://www.cdc.gov/coronavirus/2019-ncov/covid-data/forecasting-us-previous.html" target="_blank">CDC</a>
                     </li>
@@ -215,6 +212,9 @@
     <script src="https://code.highcharts.com/maps/modules/exporting.js"></script>
     <script src="https://code.highcharts.com/maps/modules/offline-exporting.js"></script>
     <script src="https://code.highcharts.com/mapdata/countries/us/us-all.js"></script>
-    <script type="text/javascript" src="js/map.js"></script>
+    <script type="text/javascript" src="js/render-maps.js"></script>
+    <script type="text/javascript" src="js/render-maps.update-graphs.js"></script>
+    <script type="text/javascript" src="js/render-maps.load-data.js"></script>
+
   </body>
 </html>

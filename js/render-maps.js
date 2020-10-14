@@ -1,8 +1,8 @@
-
+var mapChart
 // Charts the USA Map
 function chartMap(data, week) {
     // Draws the map, using weekly data and the given week
-    Highcharts.mapChart('map', {
+    mapChart = Highcharts.mapChart('map', {
 
         chart: {
             map: 'countries/us/us-all',
@@ -75,7 +75,7 @@ function chartMap(data, week) {
             },
             borderColor: 'black',
             borderWidth: 0.2,
-            name: 'Point Estimate',
+            name: 'Forecast for:',
             tooltip: {
                 pointFormat: '{point.name}: {point.value}',
                 valueDecimals: 3,

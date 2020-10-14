@@ -58,7 +58,7 @@
 }
 
 #map {
-    height: 20rem;        
+    height: 55vh;        
     margin: 0 auto; 
 }
 
@@ -153,5 +153,11 @@ hr {
 
     #graph {
         width: 100% !important;
+    }
+}
+
+@media only screen and (max-width: 767px) {
+    #header-gleam {
+        text-align: left !important;
     }
 }

@@ -30,12 +30,15 @@
     
     <!-- Header -->
     <div class="row no-gutters">
-        <div class="col">
+        <div class="col-md-6 col-xs-12">
             <div style="background-color:#182B49" class="page-header">
                 <img style="width:auto;height:85px; padding: 10px 10px 10px 10px;" src="logos/UCSanDiego_Halicioglu_White.png" alt="HDSI Logo in White">
-                <img style="width:auto;height:85px; float:right; padding: 10px 10px 10px 10px;" src="logos/DeepGleam-logo-white.png" alt="HDSI Logo in White">
             </div> 
-            
+        </div>
+        <div class="col-xl-6 col-xs-12 ">
+            <div style="background-color:#182B49" class="page-header text-right" id="header-gleam">
+                <img style="width:auto;height:85px; padding: 10px 10px 10px 10px;" src="logos/DeepGleam-logo-white.png" alt="DeepGLEAM Logo in White">
+            </div> 
         </div>
     </div>
 
@@ -64,7 +67,7 @@
 
         <div class="row no-gutters ">
             <!-- Buttons-->
-            <div class="col-xl-3 col-lg-12 text-center">
+            <div id="buttons-sidebar" class="col-xl-2 col-lg-12 text-center">
                 <div class="justify-content-center">
                     <h4>Deaths</h4>
                     <div class="btn-group btn-group-toggle" data-toggle="buttons">
@@ -92,7 +95,7 @@
                   </div>
 
             </div>
-            <div class="col-xl-6 col-lg-12">
+            <div class="col-xl-8 col-lg-12">
                 <!-- US Map Chart lives here -->
                 <div id="map" style="align:center; width: 100%;"></div>
             </div>
@@ -182,6 +185,7 @@
             </div>
         </div>
     </nav>
+    
 
     <!-- Optional JavaScript -->
     <!-- jQuery first, then Popper.js, then Bootstrap JS -->
@@ -216,7 +220,7 @@
     <script type="text/javascript" src="js/render-maps.js"></script>
     <script type="text/javascript" src="js/render-maps.update-graphs.js"></script>
     <script type="text/javascript" src="js/render-maps.load-data.js"></script>
-
+    <!--script type="text/javascript" src="js/sidebar.js"></script-->
 
   </body>
 </html>

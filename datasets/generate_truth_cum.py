@@ -2,6 +2,7 @@ import pandas as pd
 import datetime
 import numpy as np
 import json
+import sys
 
 df = pd.read_csv('truth-Cumulative Deaths.csv', 
                  dtype={"date": str, "location": str, "location_name": "str", "value": "float"})
@@ -9,7 +10,7 @@ df = df[df['location']!='US']
 df['location'] = df['location'].astype(int)
 df['date'] = pd.to_datetime(df['date'])
 # the timestamp should be two days before the result date
-df = df[(df['date'] <= pd.Timestamp(2020, 10, 10)) & (df['date'] >= pd.Timestamp(2020, 1, 25))]
+df = df[(df['date'] <= pd.Timestamp(int(sys.argv[1]), int(sys.argv[2]), int(sys.argv[3]))) & (df['date'] >= pd.Timestamp(2020, 1, 25))]
 df = df[(df['location'] < 57) & (df['location'] > 0)& (df['location'] !=11)]
 
 locations = pd.read_csv("locations.csv")

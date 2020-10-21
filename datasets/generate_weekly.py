@@ -1,8 +1,11 @@
 import numpy as np
 import pandas as pd
 import json
+import sys
 
-gleam_data = pd.read_csv("2020-10-12-UCSD_NEU-DeepGLEAM.csv")
+GLEAMCSV = sys.argv[1]
+
+gleam_data = pd.read_csv(GLEAMCSV) # Ideal if it can download straight from their github
 locations = pd.read_csv("locations.csv")
 df_master = pd.merge(gleam_data, locations, on='location')
 df_master = df_master[df_master["type"] == "point"]

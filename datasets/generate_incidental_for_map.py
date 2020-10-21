@@ -1,11 +1,14 @@
 import pandas as pd
 import numpy as np
+import sys
 
 '''
 Creates a clean JSON from the GLEAM data for use with the charting tool
 '''
 
-gleam_data = pd.read_csv("2020-10-12-UCSD_NEU-DeepGLEAM.csv") # Ideal if it can download straight from their github
+GLEAMCSV = sys.argv[1]
+
+gleam_data = pd.read_csv(GLEAMCSV) # Ideal if it can download straight from their github
 locations = pd.read_csv("locations.csv")
 df_master = pd.merge(gleam_data, locations, on='location')
 df_master = df_master[df_master["type"] == "point"]
@@ -28,6 +31,5 @@ df_week4.rename(columns={'value':'week4'})
 df_week4.reset_index(drop=True, inplace=True)
 df = pd.concat( [df_abbreviation, df_week1, df_week2, df_week3, df_week4], axis=1) 
 df.columns=['abbreviation','week1','week2','week3','week4']
-print(df)
 df = df.replace(0.0, 0.0000001).rename(columns={'abbreviation': 'code'}) # MAKE SURE ALL 0.0 ARE CONVERTED to 0.0000001
 df.to_json('df_inc.json', orient="records", indent=4)

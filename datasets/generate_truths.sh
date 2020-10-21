@@ -63,8 +63,8 @@ echo "...done"
 echo ""
 
 now=$(date +"%m/%d/%y")
-MONDAY_USA_FORMAT=$(date +"%m/%d/%y" -d "last monday")
+SATURDAY=$(date +"%m/%d/%y" -d "last monday")
 
 echo "Make sure to go into index.html and render-maps.update-graphs.js and change the date to:"
 echo \>\>\> index.html $now
-echo \>\>\> render-maps.update-graphs.js $MONDAY_USA_FORMAT
+echo \>\>\> render-maps.update-graphs.js $SATURDAY

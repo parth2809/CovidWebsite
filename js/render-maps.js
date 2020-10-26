@@ -1,4 +1,5 @@
 var mapChart
+var save
 // Charts the USA Map
 function chartMap(data, week) {
     // Draws the map, using weekly data and the given week
@@ -57,13 +58,15 @@ function chartMap(data, week) {
             point: {
                 events: {
                     click: function () {
-                        selectedState = this.code.slice(3).toUpperCase()
+                        selectedState = this.code.slice(3).toUpperCase();
                         chartLineHistorical(
                             (activeType > 0 ? statesTruthInc : statesTruthCum),
                             (activeType > 0 ? statesFutureInc : statesFutureCum),
                             (activeType > 0 ? quantilesInc : quantilesCum),
                             q,
                             selectedState);
+                        selectUSA(0, update=false)
+                        window.location = (""+window.location).replace(/#[A-Za-z0-9_]*$/,'')+"#graph"
                     },
                 },
             },
@@ -78,7 +81,7 @@ function chartMap(data, week) {
             name: 'Forecast for:',
             tooltip: {
                 pointFormat: '{point.name}: {point.value}',
-                valueDecimals: 3,
+                valueDecimals: 0,
             }
         }]
     });

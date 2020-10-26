@@ -1,6 +1,8 @@
 var activeType = 0 //1 is Cumidental, 0 is Inculative
 var activeWeek = 1 // Which week to display first (1-4)
 var selectedState = "CA" // Which state to display default information for
+var priorState = selectedState // Used for switching between states
+var typeStateOrNational = 0 // 0 is state forecasts, 1 is national forecasts
 var q = "0.95"
 var dateOfForecast = "10/17/20"
 
@@ -41,6 +43,11 @@ var weekArray = [];
 Highcharts.setOptions({
     lang: {
       thousandsSep: ','
+    },
+    chart: {
+        style: {
+            fontFamily: 'Arial'
+        }
     }
   });
 

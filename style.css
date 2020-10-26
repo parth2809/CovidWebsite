@@ -1,3 +1,12 @@
+* {
+    font-family: Arial, sans-serif;
+}
+
+h4 {
+    margin-top: 5%;
+    margin-bottom: 1%;
+}
+
 .slidecontainer {
     margin-top: 1rem;
     text-align: center;

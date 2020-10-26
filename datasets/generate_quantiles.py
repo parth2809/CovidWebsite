@@ -10,7 +10,7 @@ locations = pd.read_csv("locations.csv")
 
 df_master = pd.merge(gleam_data, locations, on='location')
 df_master = df_master[df_master["type"] == "quantile"]
-df_master = df_master.loc[~df_master['abbreviation'].isin(["US"])]
+#df_master = df_master.loc[~df_master['abbreviation'].isin(["US"])]
 df_master['target_end_date'] = pd.to_datetime(df_master['target_end_date'])
 lst = df_master["quantile"].unique().tolist()
 quantiles = list(zip(lst[:len(lst) // 2], lst[len(lst) // 2 + 1 : len(lst)][::-1])) + [(0.5, 0.5)]

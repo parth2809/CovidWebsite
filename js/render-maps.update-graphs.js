@@ -63,3 +63,23 @@ function updateGraphs(level) {
 
     chartLineHistorical(statesTruthType, statesFutureType, quantileType, q, selectedState);
 };
+
+function selectUSA(choice, update=true) {
+    let statesSelection = document.getElementById("states-selection-label")
+    let nationalSelection = document.getElementById("national-selection-label")
+    typeStateOrNational = choice
+
+    if (choice == 1) {
+        priorState = selectedState
+        selectedState = "US"
+        statesSelection.classList.remove('active')
+        nationalSelection.classList.add('active')
+    } else {
+        selectedState = priorState
+        statesSelection.classList.add('active')
+        nationalSelection.classList.remove('active')
+    }
+    if (update == true) {
+        updateGraphs(activeType)
+    }
+}

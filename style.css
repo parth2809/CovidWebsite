@@ -1,3 +1,12 @@
+* {
+    font-family: Arial, sans-serif;
+}
+
+h4 {
+    margin-top: 5%;
+    margin-bottom: 1%;
+}
+
 .slidecontainer {
     margin-top: 1rem;
     text-align: center;
@@ -135,12 +144,7 @@ hr {
 
 @media only screen and (max-width: 576px) {
     #footer-page {
-        width: 100% !important;
-        display: none;
-    }
-
-    #footer-padder {
-        display: none;
+        display: grid !important;
     }
 
     #about-section > div {

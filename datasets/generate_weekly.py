@@ -9,7 +9,7 @@ gleam_data = pd.read_csv(GLEAMCSV) # Ideal if it can download straight from thei
 locations = pd.read_csv("locations.csv")
 df_master = pd.merge(gleam_data, locations, on='location')
 df_master = df_master[df_master["type"] == "point"]
-df_master = df_master.loc[~df_master['abbreviation'].isin(["US"])]
+#df_master = df_master.loc[~df_master['abbreviation'].isin(["US"])]
 df_master['target_end_date'] = pd.to_datetime(df_master['target_end_date']).astype(np.int64) / 1000000
 
 export_inc = {}

@@ -4,7 +4,7 @@ var selectedState = "CA" // Which state to display default information for
 var priorState = selectedState // Used for switching between states
 var typeStateOrNational = 0 // 0 is state forecasts, 1 is national forecasts
 var q = "0.95"
-var dateOfForecast = "1/18/21"
+var dateOfForecast = "1/25/21"
 
 var lineColor = "#006A96"
 var forecastColor = "#00C6D7"

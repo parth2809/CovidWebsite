@@ -64,7 +64,10 @@ echo ""
 
 now=$(date +"%m/%d/%y")
 SATURDAY=$(date +"%m/%d/%y" -d "last monday")
+# Sorry about this, I needed to do it quickly
+rm ../js/dates.js
+echo 'var dateOfForecast = "'$SATURDAY'";var dateOfUpdate = "'$now'";document.getElementById("update-date").innerText = "Updated: " + dateOfUpdate' > ../js/dates.js
 
-echo "Make sure to go into index.html and render-maps.update-graphs.js and change the date to:"
+echo "Dates have been changed in ../js/dates.js to:"
 echo \>\>\> index.html $now
 echo \>\>\> render-maps.load-data.js $SATURDAY
